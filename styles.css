@@ -1,8 +1,8 @@
-/* ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
-   SIGNUM REAL ESTATE ‚Äî Shared Stylesheet
-   ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê */
+/* ===============================================
+   SIGNUM REAL ESTATE - Shared Stylesheet
+   =============================================== */
 
-/* ‚îÄ‚îÄ‚îÄ RESET ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+/* --- RESET ----------------------------------- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 img { display: block; max-width: 100%; }
@@ -10,7 +10,7 @@ a { color: inherit; text-decoration: none; }
 button { cursor: pointer; border: none; background: none; font: inherit; }
 input, textarea, select { font: inherit; }
 
-/* ‚îÄ‚îÄ‚îÄ TOKENS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+/* --- TOKENS ----------------------------------- */
 :root {
   --gold:       #F2AC3C;
   --messing:    #B08D57;
@@ -30,7 +30,7 @@ input, textarea, select { font: inherit; }
   --section-py: clamp(4rem, 7vw, 6.5rem);
 }
 
-/* ‚îÄ‚îÄ‚îÄ GEIST FONT ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+/* --- GEIST FONT ------------------------------- */
 @font-face {
   font-family: 'Geist';
   src: url('https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/fonts/geist-sans/Geist-Bold.woff2') format('woff2');
@@ -47,7 +47,7 @@ input, textarea, select { font: inherit; }
   font-weight: 400; font-display: swap;
 }
 
-/* ‚îÄ‚îÄ‚îÄ BASE ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+/* --- BASE ------------------------------------- */
 body {
   font-family: var(--font-body);
   font-size: 1rem;
@@ -56,7 +56,7 @@ body {
   background: var(--white);
 }
 
-/* ‚îÄ‚îÄ‚îÄ UTILITY ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+/* --- UTILITY ---------------------------------- */
 .container { max-width: var(--max-w); margin: 0 auto; padding: 0 var(--px); }
 .section { padding: var(--section-py) var(--px); }
 .section--dark { background: var(--schwarz); color: var(--elfenbein); }
@@ -90,7 +90,7 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
 
 .divider { width: 2rem; height: 2px; background: var(--gold); margin-bottom: 1.5rem; }
 
-/* ‚îÄ‚îÄ‚îÄ BUTTONS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+/* --- BUTTONS ---------------------------------- */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -113,7 +113,7 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
 .btn--outline-light:hover { background: rgba(247,244,237,0.1); opacity: 1; }
 .btn--lg { padding: 1rem 2.25rem; font-size: 0.875rem; }
 
-/* ‚îÄ‚îÄ‚îÄ NAV ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+/* --- NAV -------------------------------------- */
 .nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 200;
   background: rgba(255,255,255,0.97);
@@ -207,7 +207,7 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
 }
 .nav__mobile a:last-child { border-bottom: none; margin-top: 1rem; }
 
-/* ‚îÄ‚îÄ‚îÄ HERO ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+/* --- HERO ------------------------------------- */
 .hero {
   background: var(--white);
   min-height: 100vh;
@@ -315,7 +315,7 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
   margin-top: 0.2rem;
 }
 
-/* ‚îÄ‚îÄ‚îÄ STATS BAR ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+/* --- STATS BAR -------------------------------- */
 .stats-bar {
   background: var(--elfenbein);
   border-bottom: 1px solid var(--border);
@@ -349,14 +349,14 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
   line-height: 1.4;
 }
 
-/* ‚îÄ‚îÄ‚îÄ SECTION HEADER ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+/* --- SECTION HEADER --------------------------- */
 .section-head { margin-bottom: 2.75rem; }
 .section-head h2 { margin-bottom: 0.875rem; }
 .section-head p { max-width: 540px; }
 .section-head--center { text-align: center; }
 .section-head--center p { margin: 0.875rem auto 0; }
 
-/* ‚îÄ‚îÄ‚îÄ TABS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+/* --- TABS ------------------------------------- */
 .tabs__nav {
   display: flex;
   border-bottom: 1px solid var(--border);
@@ -383,7 +383,7 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
 .tab-panel { display: none; }
 .tab-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
 
-/* ‚îÄ‚îÄ‚îÄ CHECKLIST ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+/* --- CHECKLIST -------------------------------- */
 .checklist { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2.25rem; }
 .checklist li {
   display: flex;
@@ -402,7 +402,7 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
   margin-top: 2px;
 }
 
-/* ‚îÄ‚îÄ‚îÄ CITIES GRID ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+/* --- CITIES GRID ------------------------------ */
 .cities-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -420,7 +420,7 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
 .city-card__name { font-family: var(--font-head); font-weight: 700; font-size: 0.9375rem; margin-bottom: 0.2rem; }
 .city-card__meta { font-size: 0.72rem; color: var(--stein); letter-spacing: 0.03em; }
 
-/* ‚îÄ‚îÄ‚îÄ CARDS GRID ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+/* --- CARDS GRID ------------------------------- */
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -453,7 +453,7 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
 }
 .feature-card p { font-size: 0.825rem; color: var(--stein); line-height: 1.6; }
 
-/* ‚îÄ‚îÄ‚îÄ CTA BANNER ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+/* --- CTA BANNER ------------------------------- */
 .cta-banner {
   background: var(--anthrazit);
   padding: clamp(3rem, 5vw, 4.5rem) var(--px);
@@ -470,7 +470,7 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
 .cta-banner h2 { color: var(--elfenbein); font-size: clamp(1.4rem, 2.5vw, 2rem); }
 .cta-banner p { color: rgba(247,244,237,0.55); margin-top: 0.4rem; font-size: 0.9rem; }
 
-/* ‚îÄ‚îÄ‚îÄ TESTIMONIALS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+/* --- TESTIMONIALS ----------------------------- */
 .testimonials-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -529,7 +529,7 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
 }
 .testimonial-card__meta { font-size: 0.75rem; color: var(--stein); }
 
-/* ‚îÄ‚îÄ‚îÄ REF CARDS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+/* --- REF CARDS -------------------------------- */
 .ref-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -595,7 +595,7 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
 }
 .ref-stat__label { font-size: 0.68rem; color: var(--stein); letter-spacing: 0.04em; margin-top: 0.15rem; }
 
-/* ‚îÄ‚îÄ‚îÄ TEAM GRID ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+/* --- TEAM GRID -------------------------------- */
 .team-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -623,7 +623,7 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
 }
 .team-card__role { font-size: 0.72rem; color: var(--stein); }
 
-/* ‚îÄ‚îÄ‚îÄ FAQ ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+/* --- FAQ -------------------------------------- */
 .faq-list { display: flex; flex-direction: column; }
 .faq-item { border-bottom: 1px solid var(--border); }
 .faq-item__q {
@@ -657,7 +657,7 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
 }
 .faq-item.open .faq-item__a { display: block; }
 
-/* ‚îÄ‚îÄ‚îÄ FORM ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+/* --- FORM ------------------------------------- */
 .form-field { display: flex; flex-direction: column; gap: 0.375rem; }
 .form-field label {
   font-size: 0.7rem;
@@ -690,7 +690,7 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
 .form-field textarea { resize: vertical; min-height: 120px; }
 .form-field select { appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath stroke='%236F6F6F' stroke-width='1.5' stroke-linecap='round' fill='none' d='M4 6l4 4 4-4'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.875rem center; background-size: 16px; padding-right: 2.5rem; }
 
-/* ‚îÄ‚îÄ‚îÄ FOOTER ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+/* --- FOOTER ----------------------------------- */
 .footer {
   background: var(--schwarz);
   padding: clamp(3rem, 5vw, 4.5rem) var(--px) 0;
@@ -737,7 +737,7 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
 .footer__legal a { font-size: 0.73rem; color: rgba(247,244,237,0.2); transition: color 0.2s; }
 .footer__legal a:hover { color: rgba(247,244,237,0.6); }
 
-/* ‚îÄ‚îÄ‚îÄ PAGE HERO (Unterseiten) ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+/* --- PAGE HERO (Unterseiten) ------------------ */
 .page-hero {
   background: var(--elfenbein);
   padding-top: 66px;
@@ -751,7 +751,7 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
 .page-hero h1 { font-size: clamp(2rem, 4vw, 3.25rem); margin-bottom: 0.875rem; }
 .page-hero p { max-width: 580px; }
 
-/* ‚îÄ‚îÄ‚îÄ KALKULATOR ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+/* --- KALKULATOR ------------------------------- */
 .kalkulator {
   background: var(--white);
   border: 1px solid var(--border);
@@ -827,7 +827,7 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
 .kalkulator__result--highlight .kalkulator__result__label { color: rgba(247,244,237,0.5); }
 .kalkulator__note { font-size: 0.75rem; color: var(--stein); line-height: 1.6; }
 
-/* ‚îÄ‚îÄ‚îÄ PHILOSOPHY SECTION ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+/* --- PHILOSOPHY SECTION ----------------------- */
 .philosophie__inner {
   max-width: var(--max-w); margin: 0 auto;
   display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center;
@@ -848,14 +848,14 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
 .wert h4 { font-size: 0.9375rem; font-weight: 700; color: var(--elfenbein); margin-bottom: 0.35rem; }
 .wert p { font-size: 0.83rem; color: rgba(247,244,237,0.45); line-height: 1.65; }
 
-/* ‚îÄ‚îÄ‚îÄ ANIMATIONS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+/* --- ANIMATIONS ------------------------------- */
 .fade-up { opacity: 0; transform: translateY(20px); transition: opacity 0.55s ease, transform 0.55s ease; }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 .fade-up:nth-child(2) { transition-delay: 0.08s; }
 .fade-up:nth-child(3) { transition-delay: 0.16s; }
 .fade-up:nth-child(4) { transition-delay: 0.24s; }
 
-/* ‚îÄ‚îÄ‚îÄ RESPONSIVE ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+/* --- RESPONSIVE ------------------------------- */
 @media (max-width: 1024px) {
   .hero__inner { grid-template-columns: 1fr; }
   .hero::after { display: none; }
@@ -889,15 +889,15 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
   .cta-banner__inner { flex-direction: column; }
 }
 
-/* ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
-   STOCK PHOTOS ‚Äî Bild-Integration
-   ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê */
+/* ===============================================
+   STOCK PHOTOS - Bild-Integration
+   =============================================== */
 
 /* Hero mit Bild-Hintergrund (cinematisch) */
 .hero--photo { position: relative; }
 .hero--photo .hero__img-wrap img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
-/* Allgemeine Bild-F√ºllung f√ºr Platzhalter */
+/* Allgemeine Bild-Fuellung fuer Platzhalter */
 .media-fill { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 /* Ref-Card Bilder */
@@ -921,9 +921,9 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
 /* Testimonial-Avatar Bild */
 .testimonial-card__avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-/* ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
-   CINEMATIC CALCULATOR ‚Äî Kino-Renditerechner
-   ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê */
+/* ===============================================
+   CINEMATIC CALCULATOR - Kino-Renditerechner
+   =============================================== */
 
 .calc-cine {
   position: relative;
@@ -965,7 +965,7 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
   align-items: stretch;
 }
 
-/* Eingabe-Panel ‚Äî Glas */
+/* Eingabe-Panel - Glas */
 .calc-panel {
   background: rgba(247,244,237,0.035);
   border: 1px solid rgba(247,244,237,0.1);
@@ -993,7 +993,7 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
 }
 .calc-input__val small { font-size: 0.7rem; color: rgba(247,244,237,0.4); font-weight: 400; margin-left: 0.3rem; }
 
-/* Range Slider ‚Äî cinematic */
+/* Range Slider - cinematic */
 .calc-range {
   -webkit-appearance: none; appearance: none;
   width: 100%; height: 4px; border-radius: 4px;
@@ -1071,9 +1071,9 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
   .calc-metrics { grid-template-columns: 1fr; }
 }
 
-/* ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
-   LEISTUNGS-DIAGRAMM ‚Äî Wertsch√∂pfungskette
-   ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê */
+/* ===============================================
+   LEISTUNGS-DIAGRAMM - Wertschoepfungskette
+   =============================================== */
 .wertschoepfung { background: var(--elfenbein); }
 .diagram {
   position: relative;
@@ -1159,9 +1159,9 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
   .diagram { grid-template-columns: 1fr; }
 }
 
-/* ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
-   WERTSCH√ñPFUNG ‚Äî Cinematic-Variante (dunkel)
-   ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê */
+/* ===============================================
+   WERTSCHOePFUNG - Cinematic-Variante (dunkel)
+   =============================================== */
 .wertschoepfung--cine {
   position: relative;
   overflow: hidden;
@@ -1220,13 +1220,13 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
 .wertschoepfung--cine .diagram__svg path { filter: drop-shadow(0 0 4px rgba(242,172,60,0.5)); }
 .wertschoepfung--cine .diagram__svg [marker-end] { stroke-opacity: 0.55; }
 
-/* Diagramm-Pulse verst√§rkt + einheitliche Kartenh√∂he */
+/* Diagramm-Pulse verstaerkt + einheitliche Kartenhoehe */
 .wertschoepfung--cine .diag-card { min-height: 150px; }
 .wertschoepfung--cine .diagram__center { animation: sigGlow 3s ease-in-out infinite; }
 .wertschoepfung--cine .diagram__center svg { animation: sigScale 3s ease-in-out infinite; transform-origin: center; }
 @keyframes sigGlow{0%,100%{box-shadow:0 0 0 1px rgba(242,172,60,.18),0 0 45px rgba(242,172,60,.30),inset 0 0 25px rgba(242,172,60,.06)}50%{box-shadow:0 0 0 2px rgba(242,172,60,.45),0 0 110px rgba(242,172,60,.80),inset 0 0 55px rgba(242,172,60,.20)}}
 @keyframes sigScale{0%,100%{transform:scale(1)}50%{transform:scale(1.09)}}
-/* ‚îÄ‚îÄ Kundenstimmen: visuelles Upgrade ‚îÄ‚îÄ */
+/* -- Kundenstimmen: visuelles Upgrade -- */
 .testimonial-card{
   position:relative; background:var(--white);
   border:1px solid var(--border); border-top:3px solid var(--gold);
@@ -1259,14 +1259,14 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
 }
 .testimonial-card__name{ font-family:var(--font-head); font-weight:700; font-size:.9rem; }
 .testimonial-card__meta{ font-size:.72rem; color:var(--stein); display:flex; align-items:center; gap:.35rem; }
-/* kleines ‚ÄûVerifiziert"-H√§kchen vor dem Meta-Text */
+/* kleines "Verifiziert"-Haekchen vor dem Meta-Text */
 .testimonial-card__meta::before{
   content:''; display:inline-block; width:13px; height:13px; flex:none;
   background:#1faa59; border-radius:50%;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8.5l3 3 6-6.5'/%3E%3C/svg%3E");
   background-size:11px; background-repeat:no-repeat; background-position:center;
 }
-/* ‚îÄ‚îÄ Karriere: cinematischer Hero ‚îÄ‚îÄ */
+/* -- Karriere: cinematischer Hero -- */
 .page-hero--cine{
   position:relative; overflow:hidden; isolation:isolate; border-bottom:none;
   background:
@@ -1285,10 +1285,10 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
 .page-hero--cine h1{color:var(--elfenbein);}
 .page-hero--cine .eyebrow{color:var(--gold);}
 .page-hero--cine .lead{color:rgba(247,244,237,.62);}
-/* ‚îÄ‚îÄ Karriere: Job-Karten mit Gold-Akzent ‚îÄ‚îÄ */
+/* -- Karriere: Job-Karten mit Gold-Akzent -- */
 .job-card{ border-top:3px solid var(--gold); border-radius:10px; box-shadow:0 8px 30px rgba(54,54,54,.06); transition:transform .25s ease, box-shadow .25s ease; }
 .job-card:hover{ transform:translateY(-4px); box-shadow:0 18px 48px rgba(54,54,54,.12); }
-/* ‚îÄ‚îÄ Team: Karten im Signum-Stil ‚îÄ‚îÄ */
+/* -- Team: Karten im Signum-Stil -- */
 .team-grid{ grid-template-columns:repeat(3,1fr); gap:1.75rem; }
 .team-card{ background:var(--white); border-radius:12px; overflow:hidden; text-align:center;
   box-shadow:0 8px 30px rgba(54,54,54,.07); transition:transform .25s ease, box-shadow .25s ease; }
@@ -1316,7 +1316,7 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
 .team-group__title::before{content:'';width:1.75rem;height:2px;background:var(--gold);flex:none;}
 .team-card__photo img{transition:transform .5s ease;}
 .team-card:hover .team-card__photo img{transform:scale(1.05);}
-/* ‚îÄ‚îÄ Team: hochwertige Overlay-Karten ‚îÄ‚îÄ */
+/* -- Team: hochwertige Overlay-Karten -- */
 .team-grid{ grid-template-columns:repeat(3,1fr); gap:1.75rem; }
 .team-card{
   position:relative; aspect-ratio:3/4; border-radius:14px; overflow:hidden;
@@ -1357,11 +1357,11 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
 .team-dept{ background:var(--sand); }
 .team-dept--sep{ padding-top:3.25rem; margin-top:-1px; border-top:1px solid rgba(54,54,54,.10); }
 
-/* ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
-   MOBILE FIXES ‚Äî Inline-Grids umbrechen, Tabs, Overflow
-   ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê */
+/* ===============================================
+   MOBILE FIXES - Inline-Grids umbrechen, Tabs, Overflow
+   =============================================== */
 @media (max-width: 768px) {
-  /* Inline-Grids (Media-Queries k√∂nnen Inline-Styles nur per !important √ºberschreiben) */
+  /* Inline-Grids (Media-Queries koennen Inline-Styles nur per !important ueberschreiben) */
   [style*="grid-template-columns:1fr 1fr"],
   [style*="grid-template-columns: 1fr 1fr"],
   [style*="grid-template-columns:1fr 2fr"],
@@ -1390,9 +1390,9 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
   html, body { overflow-x: hidden; }
 }
 
-/* Nav-Logo Gr√∂√üe (zentral steuerbar) */
+/* Nav-Logo Groesse (zentral steuerbar) */
 .nav__logo img { height: 42px !important; width: auto !important; display: block; }
 @media (max-width: 600px) { .nav__logo img { height: 30px !important; } }
-/* Footer-Logo Gr√∂√üe */
+/* Footer-Logo Groesse */
 .footer__brand-logo img { height: 44px !important; width: auto !important; display: block; }
 @media (max-width: 600px) { .footer__brand-logo img { height: 34px !important; } }
