@@ -1393,3 +1393,6 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
 /* Nav-Logo Gr√∂√üe (zentral steuerbar) */
 .nav__logo img { height: 42px !important; width: auto !important; display: block; }
 @media (max-width: 600px) { .nav__logo img { height: 30px !important; } }
+/* Footer-Logo Gr√∂√üe */
+.footer__brand-logo img { height: 44px !important; width: auto !important; display: block; }
+@media (max-width: 600px) { .footer__brand-logo img { height: 34px !important; } }
