@@ -1158,3 +1158,35 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
 @media (max-width: 480px) {
   .diagram { grid-template-columns: 1fr; }
 }
+/* ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
+   MOBILE FIXES ‚Äî Inline-Grids umbrechen, Tabs, Overflow
+   ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê */
+@media (max-width: 768px) {
+  /* Inline-Grids (Media-Queries k√∂nnen Inline-Styles nur per !important √ºberschreiben) */
+  [style*="grid-template-columns:1fr 1fr"],
+  [style*="grid-template-columns: 1fr 1fr"],
+  [style*="grid-template-columns:1fr 2fr"],
+  [style*="grid-template-columns: 1fr 2fr"],
+  [style*="grid-template-columns:repeat(2,1fr)"],
+  [style*="grid-template-columns: repeat(2, 1fr)"],
+  [style*="grid-template-columns:repeat(3,1fr)"],
+  [style*="grid-template-columns: repeat(3, 1fr)"] {
+    grid-template-columns: 1fr !important;
+    gap: 1.75rem !important;
+  }
+}
+/* Leistungs-Tabs: auf kleinen Screens umbrechen statt horizontal scrollen */
+@media (max-width: 600px) {
+  .tabs__nav { flex-wrap: wrap; overflow-x: visible; gap: .4rem .5rem; border-bottom: none; margin-bottom: 2rem; }
+  .tab-btn { padding: .55rem 1rem; font-size: .7rem; border: 1px solid var(--border); border-radius: 2px; margin-bottom: 0; }
+  .tab-btn.active { border-color: var(--gold); color: var(--anthrazit); }
+}
+/* Karten-Grids auf Handys einspaltig */
+@media (max-width: 560px) {
+  .cards-grid { grid-template-columns: 1fr !important; }
+  .feature-card { min-width: 0; }
+}
+/* Sicherheitsnetz gegen horizontales Scrollen */
+@media (max-width: 768px) {
+  html, body { overflow-x: hidden; }
+}
