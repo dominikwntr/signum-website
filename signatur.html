@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Signum – Signatur einrichten</title>
+<style>
+  :root{--gold:#E7A32E;--gold-deep:#9A6B16;--ink:#17140e;--muted:#6d665a;--paper:#FBF8F2;--line:#EAE3D6;--line2:#DcD2c0;}
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);
+       background:radial-gradient(120% 70% at 100% -10%,rgba(231,163,46,.13),transparent 45%),var(--paper);line-height:1.55;}
+  .shell{max-width:780px;margin:0 auto;padding:2.5rem 1.25rem 5rem;}
+  .eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-deep);}
+  h1{font-size:clamp(1.7rem,4.5vw,2.4rem);letter-spacing:-.02em;margin:.5rem 0 .4rem;}
+  .sub{color:var(--muted);max-width:60ch;}
+  .step{font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);margin:2.2rem 0 .7rem;display:flex;align-items:center;gap:.55rem;}
+  .step::before{content:attr(data-n);background:var(--ink);color:#fff;width:1.5rem;height:1.5rem;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.8rem;}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:1.5rem;box-shadow:0 8px 30px rgba(23,20,14,.05);}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+  .field{display:flex;flex-direction:column;gap:.35rem;}
+  .field.full{grid-column:1/-1;}
+  label{font-size:.8rem;font-weight:600;}
+  label span{color:var(--muted);font-weight:400;}
+  input{font:inherit;font-size:.97rem;padding:.6rem .75rem;border:1px solid var(--line2);border-radius:8px;background:#fff;color:var(--ink);}
+  input:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
+  .preview{margin-top:.5rem;background:#fff;border:1px solid var(--line);border-radius:14px;padding:1.9rem;box-shadow:0 8px 30px rgba(23,20,14,.05);overflow-x:auto;}
+  .btn{font:inherit;font-weight:700;font-size:.95rem;cursor:pointer;background:var(--gold);color:#3a2905;border:0;padding:.8rem 1.4rem;border-radius:10px;margin-top:1rem;transition:.18s;}
+  .btn:hover{background:var(--gold-deep);color:#fff;}
+  .btn.ok{background:#4B7A55;color:#fff;}
+  ol{padding-left:1.15rem;} ol li{margin:.4rem 0;color:#4f4a40;} ol li b{color:var(--ink);}
+  .tabs{display:flex;gap:.5rem;margin-bottom:.8rem;flex-wrap:wrap;}
+  .tab{font:inherit;font-size:.85rem;font-weight:600;cursor:pointer;border:1px solid var(--line2);background:#fff;color:var(--muted);padding:.45rem .9rem;border-radius:99px;}
+  .tab[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:#fff;}
+  .panel{display:none;} .panel.active{display:block;}
+  .hint{font-size:.85rem;color:var(--muted);background:#FBF3E1;border:1px solid #F0DDB2;border-radius:10px;padding:.8rem 1rem;margin-top:1rem;}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="eyebrow">Signum Real Estate</div>
+  <h1>Deine E-Mail-Signatur</h1>
+  <p class="sub">Trag deine Daten ein, klick auf <b>„Signatur kopieren"</b> und füge sie in Outlook ein. Dauert keine 2 Minuten – die Firmenangaben sind schon hinterlegt.</p>
+
+  <div class="step" data-n="1">Deine Daten</div>
+  <div class="card">
+    <div class="grid">
+      <div class="field"><label>Vorname</label><input id="vn" placeholder="Max"></div>
+      <div class="field"><label>Nachname</label><input id="nn" placeholder="Mustermann"></div>
+      <div class="field full"><label>Position</label><input id="pos" list="posl" placeholder="z. B. Immobilienberater"><datalist id="posl"><option>Immobilienberater</option><option>Immobilienberaterin</option><option>Geschäftsführer</option><option>Vertrieb Kapitalanlagen</option><option>Projektentwicklung</option><option>Buchhaltung &amp; Personal</option><option>Marketing</option><option>Assistenz der Geschäftsführung</option></datalist></div>
+      <div class="field"><label>Mobil <span>(optional)</span></label><input id="mob" placeholder="+49 151 12345678"></div>
+      <div class="field"><label>E-Mail</label><input id="mail" placeholder="m.mustermann@signum-realestate.com"></div>
+    </div>
+    <p class="hint" style="margin-top:1.1rem">Tipp: Die E-Mail wird automatisch aus deinem Namen vorgeschlagen (Muster: <b>v.nachname@signum-realestate.com</b>) – prüfe kurz, ob sie stimmt, und passe sie sonst an.</p>
+  </div>
+
+  <div class="step" data-n="2">Vorschau &amp; kopieren</div>
+  <div class="preview">
+    <div id="sig" style="font-family:Aptos,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;color:#17140e;">
+      <table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-family:Aptos,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;color:#17140e;">
+        <tr>
+          <td style="padding:0 24px 0 0;vertical-align:middle;">
+            <img src="https://cdn.jsdelivr.net/gh/dominikwntr/signum-website@main/signum-logo-vertikal.png" alt="Signum Real Estate" width="112" height="151" style="display:block;border:0;">
+          </td>
+          <td style="border-left:3px solid #E7A32E;padding:2px 0 2px 22px;vertical-align:middle;">
+            <div id="pName" style="font-size:16px;font-weight:700;color:#17140e;line-height:1.2;">Max Mustermann</div>
+            <div id="pPos" style="font-size:12px;color:#9A6B16;font-weight:600;padding:3px 0 11px;">Immobilienberater</div>
+            <table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-family:Aptos,'Segoe UI',Roboto,Arial,sans-serif;font-size:12.5px;color:#17140e;line-height:1.7;">
+              <tr><td style="color:#a29a8a;padding-right:12px;font-size:11px;">Tel</td><td><a href="tel:+4953131057760" style="color:#17140e;text-decoration:none;">+49 531 31057760</a></td></tr>
+              <tr id="pMobRow"><td style="color:#a29a8a;padding-right:12px;font-size:11px;">Mobil</td><td><a id="pMobA" href="tel:+4915112345678" style="color:#17140e;text-decoration:none;">+49 151 12345678</a></td></tr>
+              <tr><td style="color:#a29a8a;padding-right:12px;font-size:11px;">Mail</td><td><a id="pMailA" href="mailto:m.mustermann@signum-realestate.com" style="color:#9A6B16;text-decoration:none;">m.mustermann@signum-realestate.com</a></td></tr>
+              <tr><td style="color:#a29a8a;padding-right:12px;font-size:11px;">Web</td><td><a href="https://signum-realestate.com" style="color:#9A6B16;text-decoration:none;">signum-realestate.com</a></td></tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+      <table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin-top:14px;font-family:Aptos,'Segoe UI',Roboto,Arial,sans-serif;">
+        <tr><td style="border-top:1px solid #E7DFD0;padding-top:11px;font-size:10px;color:#8a8478;line-height:1.5;max-width:560px;">
+          Signum Real Estate GmbH &middot; Friedrich-Seele-Stra&szlig;e 3A &middot; 38122 Braunschweig &middot; Gesch&auml;ftsf&uuml;hrer: Tim Felix Segler &middot; Amtsgericht Braunschweig HRB 212240 &middot; USt-IdNr. DE367570232<br>
+          <span style="color:#a8a192;">Diese E-Mail kann vertrauliche Informationen enthalten. Sind Sie nicht der richtige Empf&auml;nger, informieren Sie uns bitte und l&ouml;schen die Nachricht.</span>
+        </td></tr>
+      </table>
+    </div>
+  </div>
+  <button class="btn" id="copyBtn">Signatur kopieren</button>
+
+  <div class="step" data-n="3">In Outlook einfügen</div>
+  <div class="card">
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" aria-selected="true" data-p="new">Neues Outlook / Web</button>
+      <button class="tab" role="tab" aria-selected="false" data-p="old">Klassisches Outlook</button>
+      <button class="tab" role="tab" aria-selected="false" data-p="mac">Outlook Mac</button>
+    </div>
+    <div class="panel active" data-p="new">
+      <ol>
+        <li>Oben rechts <b>Einstellungen</b> (Zahnrad) → <b>E-Mail → Signaturen</b> öffnen.</li>
+        <li><b>+ Signatur hinzufügen</b>, Namen vergeben (z. B. „Signum"), ins Feld klicken und mit <b>Strg+V</b> (Mac: <b>Cmd+V</b>) einfügen.</li>
+        <li>Oben unter <b>Standard für neue Nachrichten</b> und <b>Antworten und Weiterleitungen</b> deine Signatur wählen → <b>Speichern</b>.</li>
+      </ol>
+    </div>
+    <div class="panel" data-p="old">
+      <ol>
+        <li><b>Datei → Optionen → E-Mail → Signaturen…</b></li>
+        <li><b>Neu</b> klicken, Namen vergeben.</li>
+        <li>Ins große Bearbeitungsfeld klicken und mit <b>Strg+V</b> einfügen.</li>
+        <li>Rechts bei „Neue Nachrichten" und „Antworten/Weiterleitungen" deine Signatur wählen → <b>OK</b>.</li>
+      </ol>
+    </div>
+    <div class="panel" data-p="mac">
+      <ol>
+        <li><b>Outlook → Einstellungen → Signaturen.</b></li>
+        <li>Mit <b>+</b> eine neue Signatur anlegen.</li>
+        <li>Ins Bearbeitungsfeld klicken und mit <b>Cmd+V</b> einfügen.</li>
+        <li>Unten bei „Standardsignaturen" pro Konto auswählen → schließen.</li>
+      </ol>
+    </div>
+    <div class="hint">Wichtig: <b>nicht als Bild</b> einfügen und keine „Nur Text"-Option wählen – sonst gehen Logo und Formatierung verloren. Einfach normal mit Strg/Cmd+V.</div>
+  </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+function tl(s){return s.toLowerCase().replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss").replace(/[^a-z]/g,"");}
+let mailEdited=false;
+$("mail").addEventListener("input",()=>mailEdited=true);
+function render(){
+  const vn=$("vn").value.trim(), nn=$("nn").value.trim();
+  const pos=$("pos").value.trim()||"Immobilienberater";
+  $("pName").textContent=(vn+" "+nn).trim()||"Max Mustermann";
+  $("pPos").textContent=pos;
+  if(!mailEdited){ $("mail").value = (vn&&nn) ? tl(vn).charAt(0)+"."+tl(nn)+"@signum-realestate.com" : ""; }
+  const mail=$("mail").value.trim()||"info@signum-realestate.com";
+  $("pMailA").textContent=mail; $("pMailA").href="mailto:"+mail;
+  const mob=$("mob").value.trim();
+  if(mob){$("pMobRow").style.display="";$("pMobA").textContent=mob;$("pMobA").href="tel:"+mob.replace(/[^+0-9]/g,"");}
+  else{$("pMobRow").style.display="none";}
+}
+["vn","nn","pos","mob","mail"].forEach(id=>$(id).addEventListener("input",render));
+render();
+
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected","false"));
+  t.setAttribute("aria-selected","true");
+  document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active",p.dataset.p===t.dataset.p));
+}));
+
+$("copyBtn").addEventListener("click",async()=>{
+  const node=$("sig");
+  const html=node.outerHTML;
+  const btn=$("copyBtn");
+  function done(){btn.textContent="Kopiert ✓ – jetzt in Outlook mit Strg/Cmd+V einfügen";btn.classList.add("ok");setTimeout(()=>{btn.textContent="Signatur kopieren";btn.classList.remove("ok");},4000);}
+  try{
+    await navigator.clipboard.write([new ClipboardItem({
+      "text/html":new Blob([html],{type:"text/html"}),
+      "text/plain":new Blob([node.innerText],{type:"text/plain"})
+    })]);
+    done();
+  }catch(e){
+    const r=document.createRange();r.selectNode(node);
+    const sel=getSelection();sel.removeAllRanges();sel.addRange(r);
+    try{document.execCommand("copy");done();}catch(_){alert("Bitte die Signatur oben manuell markieren und mit Strg/Cmd+C kopieren.");}
+    sel.removeAllRanges();
+  }
+});
+</script>
+</body>
+</html>
