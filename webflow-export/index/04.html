@@ -1,0 +1,32 @@
+<!-- RENDITERECHNER (Kurzfassung) -->
+<section class="xk" id="kalkulator-teaser" data-sgcalc="teaser">
+  <div class="xk__head">
+    <p class="xlabel">Renditerechner</p>
+    <h2 class="xs__title">Rechnen Sie selbst.<br>N&#252;chtern, ohne Sch&#246;nf&#228;rberei.</h2>
+  </div>
+  <div class="xk__grid">
+    <div class="xk__inputs">
+      <label class="xin"><span class="xin__l">Kaufpreis</span><span class="xin__f"><input data-in="price" type="text" inputmode="numeric" value="200.000" aria-label="Kaufpreis in Euro"><i>&#8364;</i></span></label>
+      <label class="xin"><span class="xin__l">Kaltmiete pro Monat</span><span class="xin__f"><input data-in="rent" type="text" inputmode="numeric" value="850" aria-label="Kaltmiete pro Monat in Euro"><i>&#8364;</i></span></label>
+      <label class="xin"><span class="xin__l">Eigenkapital</span><span class="xin__f"><input data-in="equity" type="text" inputmode="numeric" value="40.000" aria-label="Eigenkapital in Euro"><i>&#8364;</i></span></label>
+      <label class="xin xin--range"><span class="xin__l">Sollzins <b data-out="rateLbl">3,8 %</b></span><input data-in="rate" type="range" min="1" max="7" step="0.1" value="3.8"></label>
+      <label class="xin xin--range"><span class="xin__l">Anf&#228;ngliche Tilgung <b data-out="tilgLbl">2,0 %</b></span><input data-in="tilg" type="range" min="1" max="5" step="0.1" value="2"></label>
+    </div>
+    <div class="xk__out">
+      <p class="xk__lbl">Monatlicher &#220;berschuss vor Steuern</p>
+      <p class="xk__big" data-out="cashflow">+ 77 &#8364;</p>
+      <div class="xk__bar" aria-hidden="true">
+        <div class="xk__bar-row"><span>Miete</span><div><i data-bar="rent" style="transform:scaleX(1)"></i></div><b data-out="rentM">850 &#8364;</b></div>
+        <div class="xk__bar-row"><span>Zins</span><div><i data-bar="zins" style="transform:scaleX(.59)"></i></div><b data-out="zinsM">502 &#8364;</b></div>
+        <div class="xk__bar-row"><span>Tilgung</span><div><i data-bar="tilg" class="is-gold" style="transform:scaleX(.32)"></i></div><b data-out="tilgM">271 &#8364;</b></div>
+      </div>
+      <dl class="xk__metrics">
+        <div><dt data-out="brutto">5,10 %</dt><dd>Bruttomietrendite</dd></div>
+        <div><dt data-out="tilgJ">3.256 &#8364;</dt><dd>Verm&#246;gensaufbau durch Tilgung im ersten Jahr</dd></div>
+        <div><dt data-out="ek">10,44 %</dt><dd>Eigenkapitalrendite inklusive Tilgung</dd></div>
+      </dl>
+      <p class="xk__note">Vereinfachte Modellrechnung f&#252;r das erste Jahr mit Annuit&#228;tendarlehen, ohne Kaufnebenkosten, Bewirtschaftung und Steuereffekt. Keine Anlageberatung und keine Steuerberatung.</p>
+      <a href="/investieren#renditerechner" class="xarrow xarrow--light">Vollst&#228;ndige Analyse mit AfA und Steuereffekt</a>
+    </div>
+  </div>
+</section>
