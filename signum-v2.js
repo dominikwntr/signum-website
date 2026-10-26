@@ -344,12 +344,11 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
 
 /* Anfrage-Fragebogen: eine Frage pro Schritt */
 (function () {
-  var f = document.querySelector('form[data-funnel]');
-  if (!f) return;
+  [].slice.call(document.querySelectorAll('form[data-funnel]')).forEach(function (f) {
   var steps = [].slice.call(f.querySelectorAll('.fx__step'));
   var byId = {}; steps.forEach(function (s) { byId[s.getAttribute('data-step')] = s; });
   var bar = f.querySelector('.fx__prog i'), hist = [], cur = steps[0];
-  var LABELS = { interesse: 'Anliegen', ziel: 'Ziel', objekt: 'Objektart', wohnsitz: 'Aufenthaltsstatus', beruf: 'Beruf', probezeit: 'Probezeit bestanden', selbstaendig_2_jahre: 'Mindestens 2 Jahre selbständig', einkommen: 'Nettoeinkommen', eigenkapital: 'Eigenkapital', gemeinsam: 'Allein oder gemeinsam', zeithorizont: 'Zeitpunkt', aufmerksam: 'Aufmerksam geworden über', verkauf_objekt: 'Verkauf: Objektart', verkauf_ort: 'Verkauf: Lage', verkauf_umfang: 'Verkauf: Umfang', anfrage: 'Anfrage', erreichbarkeit: 'Beste Erreichbarkeit', berechnung: 'Berechnung aus dem Rechner', nachricht_kunde: 'Nachricht' };
+  var LABELS = { anbieter_rolle: 'Anbieter', baujahr: 'Baujahr', preisvorstellung: 'Preisvorstellung', expose_link: 'Exposé', firma: 'Firma', interesse: 'Anliegen', ziel: 'Ziel', objekt: 'Objektart', wohnsitz: 'Aufenthaltsstatus', beruf: 'Beruf', probezeit: 'Probezeit bestanden', selbstaendig_2_jahre: 'Mindestens 2 Jahre selbständig', einkommen: 'Nettoeinkommen', eigenkapital: 'Eigenkapital', gemeinsam: 'Allein oder gemeinsam', zeithorizont: 'Zeitpunkt', aufmerksam: 'Aufmerksam geworden über', verkauf_objekt: 'Verkauf: Objektart', verkauf_ort: 'Verkauf: Lage', verkauf_umfang: 'Verkauf: Umfang', anfrage: 'Anfrage', erreichbarkeit: 'Beste Erreichbarkeit', berechnung: 'Berechnung aus dem Rechner', objekt_anfrage: 'Exposé angefragt für', nachricht_kunde: 'Nachricht' };
   function path() { var ids = hist.map(function (s) { return s; }).concat([cur]); return ids; }
   function summary() {
     var seen = {}, lines = [];
@@ -359,13 +358,14 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
       var v = (el.value || '').trim(); if (!v) return; seen[n] = 1; lines.push(LABELS[n] + ': ' + v);
     }); });
     var bz = f.querySelector('[name="berechnung"]'); if (bz && bz.value && !seen.berechnung) lines.push(LABELS.berechnung + ': ' + bz.value);
+    var oa = f.querySelector('[name="objekt_anfrage"]'); if (oa && oa.value) lines.unshift(LABELS.objekt_anfrage + ': ' + oa.value);
     f.querySelector('[name="nachricht"]').value = lines.join('\n');
   }
   function show(s, back) {
     cur.hidden = true; s.hidden = false; cur = s;
     if (bar) bar.style.transform = 'scaleX(' + (parseInt(s.getAttribute('data-p'), 10) || 0) / 100 + ')';
     s.classList.remove('fx-in', 'fx-back'); void s.offsetWidth; s.classList.add(back ? 'fx-back' : 'fx-in');
-    var r = f.getBoundingClientRect(); if (r.top < 80) window.scrollTo({ top: window.scrollY + r.top - 100, behavior: 'smooth' });
+    var r = f.getBoundingClientRect(); if (r.top < 80 && document.activeElement && f.contains(document.activeElement)) window.scrollTo({ top: window.scrollY + r.top - 100, behavior: 'smooth' });
     var first = s.querySelector('input:not([type=radio]):not([type=hidden]),textarea'); if (first && !back) setTimeout(function () { try { first.focus({ preventScroll: true }); } catch (e) {} }, 350);
     steps.forEach(function (st) { st.disabled = !(st === cur || hist.indexOf(st) > -1); });
     summary();
@@ -396,12 +396,130 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
     if (cur.getAttribute('data-step') !== 'kontakt') { e.preventDefault(); var n = cur.querySelector('[data-next-btn]'); if (n) n.click(); }
   });
   /* Werte aus dem Renditerechner übernehmen */
-  try {
+  if (f.id === 'kontaktForm') try {
     var q = new URLSearchParams(location.search).get('berechnung');
+    var OBJ = { pankow: ['Damerowstraße 21, Berlin Pankow', 'Neubau'], erikaweg: ['Erikaweg 21, Braunschweig', 'Neubau'], magdeburg: ['Rothenseer Straße 3, Magdeburg', 'Bestand'], halle: ['Landsberger Straße 58, Halle (Saale)', 'Bestand'] };
+    var ob = OBJ[new URLSearchParams(location.search).get('objekt')];
+    if (ob) {
+      f.querySelector('[name="objekt_anfrage"]').value = ob[0];
+      var r1 = f.querySelector('input[name="interesse"][value="Kapitalanlage Immobilie"]'), r2 = f.querySelector('input[name="objekt"][value="' + ob[1] + '"]');
+      if (r1) r1.checked = true; if (r2) r2.checked = true;
+      hist.push(cur); show(byId.ziel);
+      var t = f.querySelector('.fx__top .fx__time'); if (t) t.textContent = 'Exposé: ' + ob[0];
+    }
     if (q) { f.querySelector('[name="berechnung"]').value = q; var r = f.querySelector('input[name="interesse"][value="Kapitalanlage Immobilie"]'); if (r) { r.checked = true; hist.push(cur); show(byId.ziel); } }
   } catch (e) {}
   steps.forEach(function (st) { st.disabled = st !== cur && hist.indexOf(st) < 0; });
   summary();
+  });
+})();
+
+/* Messung, Herkunft der Anfrage und Terminbuchung */
+(function () {
+  var CFG = window.SG_CFG || {};
+  var PIXEL = CFG.pixel || '';          /* Meta Pixel ID */
+  var HS = CFG.hubspot || '146550668';  /* HubSpot Portal fuer Seitenaufrufe am Kontakt */
+  var MEET = CFG.meeting || '';         /* HubSpot Terminlink, z. B. https://meetings-eu1.hubspot.com/name */
+  var KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid', 'gclid'];
+
+  /* Herkunft merken: erster Besuch mit Kampagnenparametern gewinnt bis zur naechsten Kampagne */
+  var attr = {};
+  try {
+    attr = JSON.parse(localStorage.getItem('sg_attr') || '{}');
+    var q = new URLSearchParams(location.search);
+    if (KEYS.some(function (k) { return q.get(k); })) { attr = {}; KEYS.forEach(function (k) { if (q.get(k)) attr[k] = q.get(k); }); attr.einstieg = location.pathname; }
+    if (!attr.einstieg) attr.einstieg = location.pathname;
+    if (!attr.referrer && document.referrer && document.referrer.indexOf(location.host) < 0) attr.referrer = document.referrer.split('?')[0];
+    localStorage.setItem('sg_attr', JSON.stringify(attr));
+  } catch (e) {}
+  function stamp(form) {
+    var data = { seite: location.pathname };
+    KEYS.concat(['einstieg', 'referrer']).forEach(function (k) { if (attr[k]) data[k] = attr[k]; });
+    if (!form.querySelector('[name="event_id"]')) data.event_id = 'sg' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+    Object.keys(data).forEach(function (k) {
+      var el = form.querySelector('input[name="' + k + '"]');
+      if (!el) { el = document.createElement('input'); el.type = 'hidden'; el.name = k; form.appendChild(el); }
+      el.value = data[k];
+    });
+  }
+  var forms = [].slice.call(document.querySelectorAll('form[data-funnel]'));
+  forms.forEach(function (f) { f.setAttribute('data-hs-do-not-collect', 'true'); stamp(f); });
+
+  /* Einwilligung ueber Cookiebot */
+  function ok(kind) { var c = window.Cookiebot && window.Cookiebot.consent; return !!(c && c[kind]); }
+  var pixelOn = false, hsOn = false;
+  function loadPixel() {
+    if (pixelOn || !PIXEL || !ok('marketing')) return; pixelOn = true;
+    !function (f, b, e, v, n, t, s) { if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); }; if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = []; t = b.createElement(e); t.async = !0; t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s); }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+    window.fbq('init', PIXEL); window.fbq('track', 'PageView');
+  }
+  function loadHS() {
+    if (hsOn || !HS || !(ok('statistics') || ok('marketing'))) return; hsOn = true;
+    var s = document.createElement('script'); s.id = 'hs-script-loader'; s.async = true; s.defer = true; s.src = 'https://js-eu1.hs-scripts.com/' + HS + '.js'; document.body.appendChild(s);
+  }
+  function init() { loadPixel(); loadHS(); }
+  window.addEventListener('CookiebotOnAccept', init); window.addEventListener('CookiebotOnConsentReady', init); init();
+
+  /* Lead Ereignis beim Absenden */
+  document.addEventListener('submit', function (e) {
+    var f = e.target; if (!f.matches || !f.matches('form[data-funnel]')) return;
+    stamp(f);
+    if (!f.checkValidity()) return;
+    var id = (f.querySelector('[name="event_id"]') || {}).value;
+    var it = f.querySelector('[name="interesse"]:checked') || f.querySelector('[name="interesse"]');
+    if (window.fbq && pixelOn) window.fbq('track', 'Lead', { content_name: it ? it.value : 'Anfrage' }, { eventID: id });
+    if (window._hsq) window._hsq.push(['trackCustomBehavioralEvent', { name: 'website_anfrage' }]);
+  }, true);
+
+  /* Termin direkt buchen nach dem Fragebogen */
+  var danke = document.getElementById('kontaktDanke'), box = document.getElementById('fxTermin');
+  if (danke && box && MEET) {
+    new MutationObserver(function () {
+      if (danke.style.display === 'none' || box.dataset.done) return;
+      var f = document.querySelector('form[data-funnel]'); if (!f) return;
+      var it = f.querySelector('[name="interesse"]:checked');
+      if (it && it.value !== 'Kapitalanlage Immobilie') return;
+      box.dataset.done = '1';
+      var v = function (n) { var el = f.querySelector('[name="' + n + '"]'); return el ? encodeURIComponent(el.value) : ''; };
+      var src = MEET + (MEET.indexOf('?') < 0 ? '?' : '&') + 'embed=true&firstName=' + v('vorname') + '&lastName=' + v('nachname') + '&email=' + v('email');
+      box.innerHTML = '<p class="fxt__lead">Wenn Sie möchten, wählen Sie jetzt direkt einen Termin für Ihr Erstgespräch:</p><div class="meetings-iframe-container" data-src="' + src + '"></div>';
+      box.hidden = false;
+      var s = document.createElement('script'); s.src = 'https://static.hsappstatic.net/MeetingsEmbed/ex/MeetingsEmbedCode.js'; document.body.appendChild(s);
+    }).observe(danke, { attributes: true, attributeFilter: ['style'] });
+  }
+})();
+
+/* Navigation: Untermenue per Klick und Tastatur */
+(function () {
+  [].slice.call(document.querySelectorAll('.nav__has-sub')).forEach(function (li) {
+    var b = li.querySelector('.nav__sub-btn');
+    b.addEventListener('click', function (e) { e.stopPropagation(); var o = li.classList.toggle('open'); b.setAttribute('aria-expanded', o ? 'true' : 'false'); });
+    li.addEventListener('keydown', function (e) { if (e.key === 'Escape') { li.classList.remove('open'); b.setAttribute('aria-expanded', 'false'); b.focus(); } });
+  });
+  document.addEventListener('click', function () { [].slice.call(document.querySelectorAll('.nav__has-sub.open')).forEach(function (li) { li.classList.remove('open'); li.querySelector('.nav__sub-btn').setAttribute('aria-expanded', 'false'); }); });
+})();
+
+/* Versand fuer Formulare mit eigenem Webhook */
+(function () {
+  [].slice.call(document.querySelectorAll('form[data-webhook]')).forEach(function (f) {
+    f.addEventListener('submit', function (e) {
+      e.preventDefault(); if (!f.checkValidity()) { f.reportValidity(); return; }
+      var btn = f.querySelector('button[type=submit]'); if (btn) { btn.disabled = true; btn.textContent = 'Wird gesendet \u2026'; }
+      var data = new URLSearchParams(new FormData(f)); data.append('quelle', f.getAttribute('data-quelle') || 'Website');
+      function done() { f.hidden = true; var d = document.getElementById(f.getAttribute('data-danke')); if (d) { d.hidden = false; d.scrollIntoView({ behavior: 'smooth', block: 'center' }); } }
+      fetch(f.getAttribute('data-webhook'), { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: data.toString() }).then(done).catch(done);
+    });
+  });
+})();
+
+/* Ratgeber: aktiver Abschnitt im Inhaltsverzeichnis */
+(function () {
+  var toc = document.querySelector('.rgx__toc'); if (!toc || !('IntersectionObserver' in window)) return;
+  var links = [].slice.call(toc.querySelectorAll('a[href^="#"]')), map = {};
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (!e.isIntersecting || !map[e.target.id]) return; links.forEach(function (a) { a.classList.remove('on'); }); map[e.target.id].classList.add('on'); });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  links.forEach(function (a) { var h = document.getElementById(a.getAttribute('href').slice(1)); if (h) { map[h.id] = a; io.observe(h); } });
 })();
 
 
@@ -505,6 +623,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
         mgmt: num('mgmt'), instand: num('instand'), bl: inp('bl').value, gebaeude: num('gebaeude'), afa: num('afa'),
         sonder: inp('sonder').checked, tax: num('tax'), wert: num('wert') };
       var f = sgFull(j);
+      root._j = j; root._f = f; if (root._cmp) root._cmp();
       out('cashflow', sEur(f.cfNachM)); root.querySelector('[data-out="cashflow"]').classList.toggle('is-neg', Math.round(f.cfNachM) < 0);
       out('brutto', pct(f.brutto)); out('ek', f.ek == null ? 'kein EK' : pct(f.ek));
       out('neben', eur(f.neben)); out('loan', eur(f.loan)); out('rateM', eur(f.rateM));
@@ -517,6 +636,65 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
       var sh = root.querySelector('[data-sonder-hint]'); if (sh) sh.hidden = !j.sonder;
       var cta = root.querySelector('.rc__cta');
       if (cta) cta.href = '/?berechnung=' + encodeURIComponent('Kaufpreis ' + eur(j.price) + ', Kaltmiete ' + eur(j.rent) + ', Eigenkapital ' + eur(j.equity) + ', Zins ' + pct(j.rate, 1) + ', Tilgung ' + pct(j.tilg, 1) + ', Cashflow nach Steuern ' + sEur(f.cfNachM) + ' pro Monat') + '#kontakt';
+    }
+    /* Vergleich Neubau und Bestand */
+    var cmpBox = root.querySelector('[data-cmp]'), cmpBtn = root.querySelector('[data-cmp-open]');
+    if (cmpBox && cmpBtn) {
+      var SZ = [{ afa: 2, sonder: false }, { afa: 4, sonder: false }, { afa: 5, sonder: true }];
+      root._cmp = function () {
+        if (cmpBox.hidden || !root._j) return;
+        var rs = SZ.map(function (z) { var x = {}; for (var k in root._j) x[k] = root._j[k]; x.afa = z.afa; x.sonder = z.sonder; return sgFull(x); });
+        var best = function (key) { var m = Math.max.apply(null, rs.map(function (r) { return r[key] == null ? -1e12 : r[key]; })); return rs.map(function (r) { return r[key] === m; }); };
+        var rows = [['Abschreibung im ersten Jahr', 'afaJ', eur], ['Steuereffekt pro Monat', 'steuerJ', function (v) { return sEur(v / 12); }], ['Cashflow nach Steuern pro Monat', 'cfNachM', sEur], ['Eigenkapitalrendite', 'ek', function (v) { return v == null ? 'kein EK' : pct(v); }]];
+        cmpBox.querySelector('[data-cmp-body]').innerHTML = rows.map(function (r) { var b = best(r[1]); return '<tr><th scope="row">' + r[0] + '</th>' + rs.map(function (x, i) { return '<td' + (b[i] ? ' class="is-best"' : '') + '>' + r[2](x[r[1]]) + '</td>'; }).join('') + '</tr>'; }).join('');
+      };
+      cmpBtn.addEventListener('click', function () { cmpBox.hidden = !cmpBox.hidden; cmpBtn.setAttribute('aria-expanded', !cmpBox.hidden); root._cmp(); });
+    }
+    /* Ergebnis als PDF */
+    var pdfForm = root.querySelector('[data-pdf]'), pdfBtn = root.querySelector('[data-pdf-open]');
+    if (pdfForm && pdfBtn) {
+      pdfBtn.addEventListener('click', function () { pdfForm.hidden = !pdfForm.hidden; pdfBtn.setAttribute('aria-expanded', !pdfForm.hidden); if (!pdfForm.hidden) pdfForm.querySelector('input').focus(); });
+      function loadPdf(cb) { if (window.jspdf) return cb(); var sc = document.createElement('script'); sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'; sc.onload = cb; document.head.appendChild(sc); }
+      function makePdf(name) {
+        var j = root._j, f = root._f, doc = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4' }), y = 20;
+        var W = 210, L = 20, R = 190; var _t = doc.text.bind(doc); doc.text = function (t) { var a = [].slice.call(arguments); var fx = function (x) { return String(x).replace(/\u2212/g, '-').replace(/\u202f|\u00a0/g, ' '); }; a[0] = Array.isArray(t) ? t.map(fx) : fx(t); return _t.apply(null, a); };
+        doc.setFillColor(20, 20, 20); doc.rect(0, 0, W, 34, 'F');
+        doc.setTextColor(242, 172, 60); doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.text('SIGNUM REAL ESTATE', L, 14);
+        doc.setTextColor(247, 244, 237); doc.setFontSize(18); doc.text('Ihre Renditeberechnung', L, 25);
+        doc.setFontSize(9); doc.setFont('helvetica', 'normal'); doc.text('Erstellt am ' + new Date().toLocaleDateString('de-DE') + (name ? ' für ' + name : ''), R, 25, { align: 'right' });
+        y = 48; doc.setTextColor(20, 20, 20);
+        function head(t) { doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(176, 141, 87); doc.text(t.toUpperCase(), L, y); y += 3; doc.setDrawColor(220, 214, 204); doc.line(L, y, R, y); y += 7; doc.setTextColor(20, 20, 20); }
+        function row(a, b, bold) { doc.setFont('helvetica', bold ? 'bold' : 'normal'); doc.setFontSize(10); doc.text(a, L, y); doc.text(b, R, y, { align: 'right' }); y += 6; }
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(28); doc.text(sEur(f.cfNachM), L, y + 4);
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(107, 104, 99); doc.text('Cashflow nach Steuern pro Monat im ersten Jahr', L, y + 11);
+        doc.text('Bruttomietrendite ' + pct(f.brutto) + '   |   Eigenkapitalrendite ' + (f.ek == null ? 'kein EK' : pct(f.ek)), L, y + 17); y += 30; doc.setTextColor(20, 20, 20);
+        head('Ihre Annahmen');
+        row('Kaufpreis', eur(j.price)); row('Wohnfläche', fmtIn(j.area, 0) + ' m²'); row('Kaltmiete pro Monat', eur(j.rent)); row('Eigenkapital', eur(j.equity));
+        row('Sollzins / anfängliche Tilgung', pct(j.rate, 2) + ' / ' + pct(j.tilg, 2)); row('Abschreibung', pct(j.afa, 1) + ' auf ' + pct(j.gebaeude, 0) + ' Gebäudeanteil' + (j.sonder ? ' plus Sonder-AfA § 7b' : ''));
+        row('Grenzsteuersatz / Wertentwicklung', pct(j.tax, 0) + ' / ' + pct(j.wert, 1) + ' p. a.'); y += 3;
+        head('Investition');
+        row('Kaufpreis', eur(j.price)); row('Kaufnebenkosten (' + pct(f.nebenPct, 1) + ')', eur(f.neben)); row('Gesamtkosten', eur(f.gesamt), true); row('Darlehen', eur(f.loan)); row('Monatliche Rate', eur(f.rateM)); y += 3;
+        head('Monatliche Rechnung im ersten Jahr');
+        row('Kaltmiete', eur(j.rent)); row('Zinsen', neg(f.zinsM)); row('Tilgung', neg(f.tilgM)); row('Verwaltung und Instandhaltung', neg(f.kostenM));
+        row('Überschuss vor Steuern', sEur(f.cfVorM), true); row('Steuereffekt', sEur(f.steuerJ / 12)); row('Cashflow nach Steuern', sEur(f.cfNachM), true); y += 3;
+        head('Vermögen in der Immobilie');
+        [10, 20, 30].forEach(function (t) { var p = f.serie[t]; row('Nach ' + t + ' Jahren (Wert ' + eur(p.wert) + ', Restschuld ' + eur(p.rest) + ')', eur(p.netto)); });
+        y += 6; doc.setFontSize(8); doc.setTextColor(107, 104, 99);
+        doc.text(doc.splitTextToSize('Vereinfachte Modellrechnung ohne Mietsteigerung, Leerstand, Kirchensteuer und Solidaritätszuschlag. Keine Anlageberatung und keine Steuerberatung. Sonderabschreibung und Förderung hängen von den Voraussetzungen im Einzelfall ab.', R - L), L, y);
+        doc.setFillColor(247, 244, 237); doc.rect(0, 280, W, 17, 'F'); doc.setTextColor(20, 20, 20); doc.setFontSize(8.5);
+        doc.text('Signum Real Estate GmbH  |  Am Alten Bahnhof 13, 38122 Braunschweig', L, 287); doc.text('+49 531 31057760  |  info@signum-realestate.com  |  signum-realestate.com', L, 292);
+        doc.save('Signum-Renditeberechnung.pdf');
+      }
+      pdfForm.addEventListener('submit', function (e) {
+        e.preventDefault(); if (!pdfForm.checkValidity()) { pdfForm.reportValidity(); return; }
+        var j = root._j, f = root._f, name = pdfForm.vorname.value.trim();
+        var sum = 'Kaufpreis ' + eur(j.price) + ', Kaltmiete ' + eur(j.rent) + ', Eigenkapital ' + eur(j.equity) + ', Zins ' + pct(j.rate, 1) + ', Tilgung ' + pct(j.tilg, 1) + ', Cashflow nach Steuern ' + sEur(f.cfNachM) + ' pro Monat';
+        var d = new URLSearchParams({ vorname: name, email: pdfForm.email.value.trim(), datenschutz: 'akzeptiert', interesse: 'Kapitalanlage Immobilie', berechnung: sum, nachricht: 'PDF aus dem Renditerechner angefordert\nBerechnung: ' + sum, seite: location.pathname, quelle: 'Website Rechner PDF' });
+        try { var at = JSON.parse(localStorage.getItem('sg_attr') || '{}'); for (var k in at) d.append(k, at[k]); } catch (x) {}
+        fetch('https://hooks.zapier.com/hooks/catch/24642695/43b965c/', { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: d.toString() }).catch(function () {});
+        if (window.fbq) window.fbq('track', 'Lead', { content_name: 'Rechner PDF' });
+        loadPdf(function () { makePdf(name); var ok = pdfForm.querySelector('.rc__pdfok'); if (ok) ok.hidden = false; });
+      });
     }
     calc();
     var rt; window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(calc, 150); });
