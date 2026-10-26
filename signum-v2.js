@@ -237,6 +237,30 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
     } else rv.forEach(function (el) { el.classList.add('in'); });
 
 
+
+    /* Mobile Handlungsleiste */
+    if (!document.querySelector('.sg-bar')) {
+      var bar = document.createElement('div'); bar.className = 'sg-bar';
+      bar.innerHTML = '<a href="tel:+4953131057760"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>Anrufen</a><a href="' + (document.getElementById('kontakt') ? '#kontakt' : '/#kontakt') + '">Erstgespräch vereinbaren</a>';
+      document.body.appendChild(bar);
+      var hide = $$('#kontakt, .footer, .xcta');
+      var ub = function () {
+        var past = window.scrollY > window.innerHeight * 0.6, near = hide.some(function (e) { var r = e.getBoundingClientRect(); return r.top < window.innerHeight && r.bottom > 0; });
+        bar.classList.toggle('on', past && !near);
+      };
+      window.addEventListener('scroll', ub, { passive: true }); ub();
+    }
+
+    /* Rechnerwerte ins Kontaktformular übernehmen */
+    try {
+      var q = new URLSearchParams(location.search).get('berechnung');
+      var ta = document.querySelector('#kontaktForm textarea[name="nachricht"]');
+      if (q && ta) {
+        ta.value = 'Meine Berechnung: ' + q + '\n\nBitte prüfen Sie diese Rechnung mit mir.';
+        var sel = document.querySelector('#kontaktForm select[name="interesse"]'); if (sel) sel.value = 'Kapitalanlage Immobilie';
+      }
+    } catch (e) {}
+
     /* Referenzen filtern */
     $$('[data-filter-root]').forEach(function (root) {
       var btns = $$('[data-filter]', root), cards = $$('[data-st]', root);
@@ -414,6 +438,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
       var p = f.serie[years]; out('c_wert', eur(p.wert)); out('c_rest', eur(p.rest)); out('c_netto', eur(p.netto));
       chart(root.querySelector('[data-chart]'), f.serie, years);
       var sh = root.querySelector('[data-sonder-hint]'); if (sh) sh.hidden = !j.sonder;
+      var cta = root.querySelector('.rc__cta');
+      if (cta) cta.href = '/?berechnung=' + encodeURIComponent('Kaufpreis ' + eur(j.price) + ', Kaltmiete ' + eur(j.rent) + ', Eigenkapital ' + eur(j.equity) + ', Zins ' + pct(j.rate, 1) + ', Tilgung ' + pct(j.tilg, 1) + ', Cashflow nach Steuern ' + sEur(f.cfNachM) + ' pro Monat') + '#kontakt';
     }
     calc();
     var rt; window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(calc, 150); });
