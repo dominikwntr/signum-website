@@ -1,78 +1,84 @@
-/* Signum Rechenkern v2: reine Funktionen, ohne DOM. Wird in signum-v2.js eingebettet und per Node getestet. */
+/* Signum Rechenkern v3: reine Funktionen, ohne DOM. Wird in signum-v2.js eingebettet und per Node getestet. */
 var SG_GREST = { BW:5.0, BY:3.5, BE:6.0, BB:6.5, HB:5.5, HH:5.5, HE:6.0, MV:6.0, NI:5.0, NW:6.5, RP:5.0, SL:6.5, SN:5.5, ST:5.0, SH:6.5, TH:5.0 };
 var SG_NOTAR = 2.0;          // Notar und Grundbuch, pauschal in % des Kaufpreises
 var SG_7B_CAP_M2 = 4000;     // Bemessungsgrundlage § 7b, max. 4.000 €/m² Wohnfläche
 
-/* Annuitätendarlehen: Zins und Tilgung über n Monate exakt fortschreiben */
+function sgNum(x) { x = +x; return isFinite(x) && x > 0 ? x : 0; }
+
+/* Annuitätendarlehen: Zins und Tilgung Monat für Monat. Zins und Tilgung dürfen 0 % sein. */
 function sgAmort(loan, ratePct, tilgPct, months) {
+  loan = sgNum(loan); ratePct = sgNum(ratePct); tilgPct = sgNum(tilgPct);
   var r = ratePct / 100 / 12;
   var pay = loan * (ratePct + tilgPct) / 100 / 12;   // konstante Monatsrate
   var rest = loan, zins = 0, tilg = 0;
-  for (var m = 0; m < months && rest > 0; m++) {
+  for (var m = 0; m < months && rest > 0.005; m++) {
     var zi = rest * r;
-    var ti = Math.min(rest, pay - zi);
+    var ti = Math.max(0, Math.min(rest, pay - zi));
     zins += zi; tilg += ti; rest -= ti;
   }
-  return { rate: pay, zins: zins, tilg: tilg, rest: Math.max(0, rest) };
+  return { rate: loan > 0 ? pay : 0, zins: zins, tilg: tilg, rest: Math.max(0, rest) };
 }
 
-/* Kurzrechner Startseite: Cashflow vor Steuern und vor Bewirtschaftung */
+/* Kurzrechner Startseite: Überschuss vor Steuern, ohne Nebenkosten und Bewirtschaftung */
 function sgTeaser(i) {
-  var loan = Math.max(0, i.price - i.equity);
+  var price = sgNum(i.price), rent = sgNum(i.rent), equity = sgNum(i.equity);
+  var loan = Math.max(0, price - equity);
+  var ekEff = Math.min(equity, price);
   var y1 = sgAmort(loan, i.rate, i.tilg, 12);
-  var mieteJ = i.rent * 12;
+  var mieteJ = rent * 12;
   return {
-    loan: loan,
-    rateM: y1.rate,
-    cashflowM: i.rent - y1.rate,
-    brutto: i.price > 0 ? mieteJ / i.price * 100 : 0,
-    tilgJ: y1.tilg,
-    zinsJ: y1.zins,
-    // Eigenkapitalrendite inkl. Tilgung: (Miete minus Zinsen) / Eigenkapital
-    ek: i.equity > 0 ? (mieteJ - y1.zins) / i.equity * 100 : null
+    loan: loan, rateM: y1.rate, zinsJ: y1.zins, tilgJ: y1.tilg,
+    cashflowM: rent - y1.rate,
+    brutto: price > 0 ? mieteJ / price * 100 : 0,
+    ek: ekEff > 0 ? (mieteJ - y1.zins) / ekEff * 100 : null   // inkl. Tilgung
   };
 }
 
-/* Vollrechner Investieren-Seite */
+/* Vollrechner */
 function sgFull(i) {
+  var price = sgNum(i.price), rent = sgNum(i.rent), equity = sgNum(i.equity), area = sgNum(i.area);
   var grest = SG_GREST[i.bl] != null ? SG_GREST[i.bl] : 5.0;
   var nebenPct = grest + SG_NOTAR;
-  var neben = i.price * nebenPct / 100;
-  var gesamt = i.price + neben;
-  var loan = Math.max(0, gesamt - i.equity);                // Eigenkapital deckt zuerst die Nebenkosten
+  var neben = price * nebenPct / 100;
+  var gesamt = price + neben;
+  var loan = Math.max(0, gesamt - equity);               // Eigenkapital deckt zuerst die Nebenkosten
+  var ekEff = Math.min(equity, gesamt);                    // tatsächlich eingesetztes Eigenkapital
   var y1 = sgAmort(loan, i.rate, i.tilg, 12);
-  var y10 = sgAmort(loan, i.rate, i.tilg, 120);
 
-  var mieteJ = i.rent * 12;
-  var instandM = i.instand * i.area;                         // €/m² und Monat × Wohnfläche
-  var kostenJ = (i.mgmt + instandM) * 12;                    // nicht umlagefähige Kosten
+  var mieteJ = rent * 12;
+  var instandM = sgNum(i.instand) * area;
+  var kostenM = sgNum(i.mgmt) + instandM;                  // nicht umlagefähige Kosten pro Monat
 
-  // AfA: nur der Gebäudeanteil inkl. anteiliger Nebenkosten ist abschreibbar
-  var afaBasis = gesamt * i.gebaeude / 100;
-  var afaRegel = afaBasis * i.afa / 100;                     // linear oder degressiv (Jahr 1)
-  var sonderBasis = Math.min(afaBasis, SG_7B_CAP_M2 * i.area);
-  var afaSonder = i.sonder ? sonderBasis * 5 / 100 : 0;      // § 7b: 5 % p.a. in Jahr 1 bis 4
+  var afaBasis = gesamt * sgNum(i.gebaeude) / 100;         // nur Gebäudeanteil inkl. anteiliger Nebenkosten
+  var afaRegel = afaBasis * sgNum(i.afa) / 100;
+  var afaSonder = i.sonder ? Math.min(afaBasis, SG_7B_CAP_M2 * area) * 0.05 : 0;
   var afaJ = afaRegel + afaSonder;
 
-  // Steuer Jahr 1: Mieteinnahmen minus Werbungskosten (Zinsen, AfA, Bewirtschaftung)
-  var ergebnis = mieteJ - y1.zins - afaJ - kostenJ;
-  var steuerJ = -ergebnis * i.tax / 100;                     // positiv = Erstattung, negativ = Steuerlast
+  var ergebnis = mieteJ - y1.zins - afaJ - kostenM * 12;   // steuerliches Ergebnis Jahr 1
+  var steuerJ = -ergebnis * sgNum(i.tax) / 100;            // positiv = Erstattung, negativ = Steuerlast
 
-  var cfVorM = i.rent - y1.rate - instandM - i.mgmt;
+  var cfVorM = rent - y1.rate - kostenM;
   var cfNachM = cfVorM + steuerJ / 12;
 
-  var wert10 = i.price * Math.pow(1 + i.wert / 100, 10);
-  var vermoegen10 = wert10 - y10.rest;                       // Eigenkapital in der Immobilie nach 10 Jahren
+  // Vermögensentwicklung über 30 Jahre
+  var serie = [];
+  for (var t = 0; t <= 30; t++) {
+    var wert = price * Math.pow(1 + (+i.wert || 0) / 100, t);
+    var rest = t === 0 ? loan : sgAmort(loan, i.rate, i.tilg, t * 12).rest;
+    serie.push({ t: t, wert: wert, rest: rest, netto: wert - rest });
+  }
+  var y10 = serie[10];
 
   return {
-    grest: grest, nebenPct: nebenPct, neben: neben, gesamt: gesamt, loan: loan,
-    rateM: y1.rate, zinsJ: y1.zins, tilgJ: y1.tilg,
-    brutto: i.price > 0 ? mieteJ / i.price * 100 : 0,
-    netto: gesamt > 0 ? (mieteJ - kostenJ) / gesamt * 100 : 0,
-    afaBasis: afaBasis, afaJ: afaJ, afaSonder: afaSonder,
+    grest: grest, nebenPct: nebenPct, neben: neben, gesamt: gesamt, loan: loan, ekEff: ekEff,
+    rateM: y1.rate, zinsJ: y1.zins, tilgJ: y1.tilg, zinsM: y1.zins / 12, tilgM: y1.tilg / 12,
+    kostenM: kostenM, instandM: instandM,
+    brutto: price > 0 ? mieteJ / price * 100 : 0,
+    netto: gesamt > 0 ? (mieteJ - kostenM * 12) / gesamt * 100 : 0,
+    afaBasis: afaBasis, afaJ: afaJ, afaSonder: afaSonder, ergebnis: ergebnis,
     steuerJ: steuerJ, cfVorM: cfVorM, cfNachM: cfNachM,
-    ek: i.equity > 0 ? (cfNachM * 12 + y1.tilg) / i.equity * 100 : null,
-    wert10: wert10, rest10: y10.rest, vermoegen10: vermoegen10
+    ek: ekEff > 0 ? (cfNachM * 12 + y1.tilg) / ekEff * 100 : null,
+    wert10: y10.wert, rest10: y10.rest, vermoegen10: y10.netto, serie: serie
   };
 }
 if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort: sgAmort, sgTeaser: sgTeaser, sgFull: sgFull, SG_GREST: SG_GREST };
@@ -230,6 +236,17 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
       rv.forEach(function (el) { io2.observe(el); });
     } else rv.forEach(function (el) { el.classList.add('in'); });
 
+
+    /* Referenzen filtern */
+    $$('[data-filter-root]').forEach(function (root) {
+      var btns = $$('[data-filter]', root), cards = $$('[data-st]', root);
+      btns.forEach(function (b) { b.addEventListener('click', function () {
+        var f = b.getAttribute('data-filter');
+        btns.forEach(function (x) { x.classList.toggle('on', x === b); });
+        cards.forEach(function (c) { c.hidden = !(f === 'alle' || c.getAttribute('data-st') === f); });
+      }); });
+    });
+
     /* ===== Rechner ===== */
     $$('[data-sgcalc]').forEach(function (root) {
       var mode = root.getAttribute('data-sgcalc');
@@ -284,4 +301,123 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
       calc();
     });
   });
+})();
+
+
+/* ===== Signum Rechner v3: Oberfläche ===== */
+(function () {
+  'use strict';
+  if (window.__sgRc) return; window.__sgRc = true;
+  var de = new Intl.NumberFormat('de-DE');
+  var MINUS = '−';
+  function eur(n) { return de.format(Math.round(n)) + ' €'; }
+  function sEur(n) { var r = Math.round(n); return (r < 0 ? MINUS + ' ' : r > 0 ? '+ ' : '') + de.format(Math.abs(r)) + ' €'; }
+  function neg(n) { var r = Math.round(n); return (r > 0 ? MINUS + ' ' : '') + de.format(Math.abs(r)) + ' €'; }
+  function pct(n, d) { d = d == null ? 2 : d; return n.toLocaleString('de-DE', { minimumFractionDigits: d, maximumFractionDigits: d }) + ' %'; }
+  function parse(v) {
+    var s = String(v).trim().replace(/\s/g, '');
+    if (/,/.test(s)) s = s.replace(/\./g, '').replace(',', '.');
+    else if (/^\d{1,3}(\.\d{3})+$/.test(s)) s = s.replace(/\./g, '');
+    var n = parseFloat(s.replace(/[^0-9.\-]/g, ''));
+    return isNaN(n) ? 0 : Math.max(0, n);
+  }
+  function fmtIn(n, dec) { return n.toLocaleString('de-DE', { minimumFractionDigits: dec, maximumFractionDigits: dec }); }
+
+  function chart(el, serie, years) {
+    if (!el) return;
+    var W = Math.max(300, Math.round(el.clientWidth || 640)), H = W < 500 ? 220 : 230, L = 56, R = 30, T = 12, B = 28;
+    var pts = serie.slice(0, years + 1);
+    var max = Math.max.apply(null, pts.map(function (p) { return p.wert; })) || 1;
+    var mag = Math.pow(10, Math.floor(Math.log10(max / 4))), step = [1, 2, 2.5, 5, 10].map(function (m) { return m * mag; }).find(function (s) { return max / s <= 5; });
+    max = Math.ceil(max / step) * step; var nT = Math.round(max / step);
+    function x(t) { return L + (W - L - R) * t / years; }
+    function y(v) { return T + (H - T - B) * (1 - v / max); }
+    function line(k) { return pts.map(function (p, i) { return (i ? 'L' : 'M') + x(p.t).toFixed(1) + ',' + y(p[k]).toFixed(1); }).join(''); }
+    var area = line('wert') + pts.slice().reverse().map(function (p) { return 'L' + x(p.t).toFixed(1) + ',' + y(p.rest).toFixed(1); }).join('') + 'Z';
+    var g = '';
+    for (var k = 0; k <= nT; k++) { var v = step * k, yy = y(v); g += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + yy + '" y2="' + yy + '" class="g"/><text x="' + (L - 8) + '" y="' + (yy + 4) + '" text-anchor="end">' + (v >= 1e6 ? (v / 1e6).toLocaleString('de-DE', { maximumFractionDigits: 1 }) + ' Mio.' : de.format(Math.round(v / 1000)) + ' Tsd.') + '</text>'; }
+    var tickStep = W < 500 ? (years <= 10 ? 5 : 10) : (years <= 10 ? 2 : 5);
+    for (var t = 0; t <= years; t += tickStep) g += '<text x="' + x(t) + '" y="' + (H - 8) + '" text-anchor="middle">' + (t === 0 ? 'Heute' : (W < 500 ? t + ' J.' : 'Jahr ' + t)) + '</text>';
+    el.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Vermögensentwicklung über ' + years + ' Jahre">' + g +
+      '<path d="' + area + '" class="a"/><path d="' + line('wert') + '" class="w"/><path d="' + line('rest') + '" class="r"/></svg>';
+  }
+
+  function init(root) {
+    var mode = root.getAttribute('data-rc'), years = 10;
+    function inp(k) { return root.querySelector('[data-in="' + k + '"]'); }
+    function num(k) { var e = inp(k); return e ? parse(e.value) : 0; }
+    function out(k, t) { root.querySelectorAll('[data-out="' + k + '"]').forEach(function (e) { e.textContent = t; }); }
+
+    /* Schieberegler und Eingabefeld koppeln */
+    root.querySelectorAll('[data-range]').forEach(function (r) {
+      var k = r.getAttribute('data-range'), e = inp(k), dec = (r.step.split('.')[1] || '').length;
+      r.addEventListener('input', function () { e.value = fmtIn(parseFloat(r.value), dec); calc(); });
+      e.addEventListener('input', function () { var v = parse(e.value); r.value = Math.min(+r.max, v); calc(); });
+      e.addEventListener('blur', function () { e.value = fmtIn(parse(e.value), dec); });
+      e.value = fmtIn(parse(e.value), dec);
+    });
+    root.querySelectorAll('input[type="text"][data-in]').forEach(function (e) {
+      if (root.querySelector('[data-range="' + e.getAttribute('data-in') + '"]')) return;
+      e.addEventListener('input', calc);
+      e.addEventListener('blur', function () { e.value = fmtIn(parse(e.value), 0); calc(); });
+    });
+    root.querySelectorAll('select[data-in], input[type="checkbox"][data-in]').forEach(function (e) { e.addEventListener('change', calc); });
+    root.querySelectorAll('input[type="text"][data-in]').forEach(function (e) { e.addEventListener('focus', function () { e.select(); }); });
+
+    /* Reiter */
+    function tab(name) {
+      root.querySelectorAll('[data-tab]').forEach(function (b) { var on = b.getAttribute('data-tab') === name; b.classList.toggle('on', on); b.setAttribute('aria-selected', on); });
+      root.querySelectorAll('[data-pane]').forEach(function (p) { p.classList.toggle('on', p.getAttribute('data-pane') === name); });
+    }
+    root.querySelectorAll('[data-tab]').forEach(function (b) { b.addEventListener('click', function () { tab(b.getAttribute('data-tab')); }); });
+    root.querySelectorAll('[data-goto]').forEach(function (b) { b.addEventListener('click', function () { tab(b.getAttribute('data-goto')); }); });
+
+    /* Abschreibungsart setzt Startwert */
+    var art = inp('afaArt');
+    if (art) art.addEventListener('change', function () {
+      var d = { bestand: 2, alt: 2.5, gutachten: 4, neubau: 3, degressiv: 5 }[art.value];
+      var e = inp('afa'), r = root.querySelector('[data-range="afa"]');
+      if (d != null) { e.value = fmtIn(d, 1); if (r) r.value = d; calc(); }
+    });
+    root.querySelectorAll('[data-years]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        years = +b.getAttribute('data-years');
+        root.querySelectorAll('[data-years]').forEach(function (x) { x.classList.toggle('on', x === b); });
+        calc();
+      });
+    });
+
+    function calc() {
+      if (mode === 'teaser') {
+        var i = { price: num('price'), rent: num('rent'), equity: num('equity'), rate: num('rate'), tilg: num('tilg') };
+        var r = sgTeaser(i);
+        out('cashflow', sEur(r.cashflowM));
+        root.querySelector('[data-out="cashflow"]').classList.toggle('is-neg', Math.round(r.cashflowM) < 0);
+        out('brutto', pct(r.brutto)); out('ek', r.ek == null ? 'kein EK' : pct(r.ek));
+        var z = r.zinsJ / 12, t = r.tilgJ / 12, rest = Math.max(0, i.rent - z - t), tot = Math.max(i.rent, z + t, 1);
+        out('t_zins', eur(z)); out('t_tilg', eur(t)); out('t_rest', sEur(i.rent - z - t));
+        var bz = root.querySelector('[data-bar="zins"]'), bt = root.querySelector('[data-bar="tilg"]'), br = root.querySelector('[data-bar="rest"]');
+        if (bz) { bz.style.flexGrow = z / tot; bt.style.flexGrow = t / tot; br.style.flexGrow = rest / tot; }
+        return;
+      }
+      var j = { price: num('price'), rent: num('rent'), equity: num('equity'), area: num('area'), rate: num('rate'), tilg: num('tilg'),
+        mgmt: num('mgmt'), instand: num('instand'), bl: inp('bl').value, gebaeude: num('gebaeude'), afa: num('afa'),
+        sonder: inp('sonder').checked, tax: num('tax'), wert: num('wert') };
+      var f = sgFull(j);
+      out('cashflow', sEur(f.cfNachM)); root.querySelector('[data-out="cashflow"]').classList.toggle('is-neg', Math.round(f.cfNachM) < 0);
+      out('brutto', pct(f.brutto)); out('ek', f.ek == null ? 'kein EK' : pct(f.ek));
+      out('neben', eur(f.neben)); out('loan', eur(f.loan)); out('rateM', eur(f.rateM));
+      out('t_rent', eur(j.rent)); out('t_zins', neg(f.zinsM)); out('t_tilg', neg(f.tilgM)); out('t_kosten', neg(f.kostenM));
+      out('t_vor', sEur(f.cfVorM)); out('t_steuer', sEur(f.steuerJ / 12)); out('t_nach', sEur(f.cfNachM));
+      out('i_price', eur(j.price)); out('i_nebenPct', '(' + pct(f.nebenPct, 1) + ')'); out('i_neben', eur(f.neben)); out('i_gesamt', eur(f.gesamt));
+      out('i_ek', eur(f.ekEff)); out('i_loan', eur(f.loan));
+      var p = f.serie[years]; out('c_wert', eur(p.wert)); out('c_rest', eur(p.rest)); out('c_netto', eur(p.netto));
+      chart(root.querySelector('[data-chart]'), f.serie, years);
+      var sh = root.querySelector('[data-sonder-hint]'); if (sh) sh.hidden = !j.sonder;
+    }
+    calc();
+    var rt; window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(calc, 150); });
+  }
+  function ready(fn) { if (document.readyState !== 'loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
+  ready(function () { document.querySelectorAll('[data-rc]').forEach(init); });
 })();
