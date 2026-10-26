@@ -1831,3 +1831,5 @@ html{scroll-behavior:smooth}
 .rgx__cta-b{display:flex;flex-wrap:wrap;align-items:center;gap:1rem 1.5rem}
 @media (prefers-reduced-motion:reduce){.rgh__media img{animation:none;transform:none}}
 .ob__media>img:first-child{object-position:50% 30%}
+
+.tg__mtxt{margin:.9rem 0 0;color:var(--anthrazit);font-size:clamp(.95rem,1.2vw,1.05rem);line-height:1.75;max-width:52ch}
