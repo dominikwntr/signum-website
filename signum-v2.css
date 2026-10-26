@@ -1658,3 +1658,21 @@ p{text-wrap:pretty}
 .xp__half--light .xlabel{color:#7a5c2e}
 .rgx__toc ol a{display:block;padding:.45rem 0 .45rem 1rem;margin-left:-1px;border-left:1px solid transparent}
 .rgx__toc .rgx__tocbtn{color:var(--elfenbein) !important;padding:.85rem 1rem !important;border-left:0 !important;margin:0}
+
+/* ---------- Team: Infos beim Darueberfahren oder Wischen ---------- */
+.ts__lineup{position:relative;touch-action:pan-y;cursor:default}
+.ts__lineup img{transition:opacity .35s var(--ease),filter .35s var(--ease)}
+.ts__lineup.is-active img:not(.on){filter:brightness(.78) saturate(.9)}
+.ts__lineup.is-active img.on{filter:drop-shadow(0 16px 22px rgba(60,45,25,.3)) brightness(1.04)}
+.ts__tip{position:absolute;z-index:8;left:0;top:0;width:min(17rem,70vw);padding:.85rem 1rem;background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:6px;box-shadow:0 20px 40px -20px rgba(20,20,20,.35);pointer-events:none;opacity:0;transform:translate(-50%,calc(-100% - 10px)) translateY(6px);transition:opacity .25s var(--ease),transform .25s var(--ease);text-align:left}
+.ts__lineup.is-active .ts__tip{opacity:1;transform:translate(-50%,calc(-100% - 10px))}
+.ts__tip b{display:block;font-family:var(--font-head);font-weight:600;font-size:1rem;color:var(--ink)}
+.ts__tip span{display:block;font-size:.75rem;font-weight:600;color:var(--messing);margin:.15rem 0 .45rem}
+.ts__tip small{display:block;font-size:.8rem;line-height:1.5;color:var(--anthrazit)}
+.ts__hint{position:relative;z-index:4;text-align:center;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:1rem 0 0}
+.tc__stage{position:relative;cursor:pointer;outline:none}
+.tc__more{position:absolute;left:0;right:0;bottom:0;margin:0;padding:2.5rem .9rem .9rem;font-size:.8rem;line-height:1.45;color:var(--elfenbein);background:linear-gradient(0deg,rgba(14,13,11,.88) 0%,rgba(14,13,11,.7) 55%,rgba(14,13,11,0) 100%);opacity:0;transform:translateY(8px);transition:opacity .35s var(--ease),transform .35s var(--ease);pointer-events:none}
+.tc:hover .tc__more,.tc__stage:focus-visible .tc__more,.tc__stage.open .tc__more{opacity:1;transform:none}
+.tc__stage:focus-visible{box-shadow:0 0 0 2px var(--ink)}
+@media(hover:none){.tc__stage::after{content:"i";position:absolute;right:.6rem;top:.6rem;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.9);color:var(--ink);font:italic 600 .8rem/22px Georgia,serif;text-align:center;transition:opacity .25s}.tc__stage.open::after{opacity:0}}
+@media (prefers-reduced-motion:reduce){.ts__tip,.tc__more{transition:none}}

@@ -522,6 +522,41 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
   links.forEach(function (a) { var h = document.getElementById(a.getAttribute('href').slice(1)); if (h) { map[h.id] = a; io.observe(h); } });
 })();
 
+/* Team: Name und Kurztext beim Darueberfahren oder Wischen ueber das Gruppenbild */
+(function () {
+  var box = document.querySelector('[data-lineup]'); if (!box) return;
+  var tip = box.querySelector('.ts__tip'), imgs = [].slice.call(box.querySelectorAll('img[data-n]')), cur = null, hideT;
+  function pick(x) {
+    var best = null, d = 1e9;
+    imgs.forEach(function (im) { if (!im.offsetWidth) return; var r = im.getBoundingClientRect(), c = r.left + r.width / 2, dd = Math.abs(c - x); if (dd < d) { d = dd; best = im; } });
+    return best;
+  }
+  function show(im) {
+    clearTimeout(hideT); if (!im) return; box.classList.add('is-active');
+    if (im === cur) return;
+    if (cur) cur.classList.remove('on'); cur = im; im.classList.add('on');
+    tip.querySelector('b').textContent = im.dataset.n; tip.querySelector('span').innerHTML = im.dataset.r; tip.querySelector('small').textContent = im.dataset.t;
+    var br = box.getBoundingClientRect(), r = im.getBoundingClientRect(), half = tip.offsetWidth / 2 + 8;
+    var cx = Math.max(half, Math.min(br.width - half, r.left - br.left + r.width / 2));
+    tip.style.left = cx + 'px'; tip.style.top = (r.top - br.top + r.height * 0.03) + 'px';
+  }
+  function hide(delay) { clearTimeout(hideT); hideT = setTimeout(function () { box.classList.remove('is-active'); if (cur) cur.classList.remove('on'); cur = null; }, delay || 0); }
+  box.addEventListener('pointermove', function (e) { show(pick(e.clientX)); });
+  box.addEventListener('pointerdown', function (e) { show(pick(e.clientX)); });
+  box.addEventListener('pointerleave', function (e) { hide(e.pointerType === 'mouse' ? 0 : 2500); });
+  box.addEventListener('pointerup', function (e) { if (e.pointerType !== 'mouse') hide(2500); });
+  window.addEventListener('resize', function () { hide(); });
+})();
+
+/* Team: Kurztext auf den Karten per Antippen */
+(function () {
+  [].slice.call(document.querySelectorAll('.tc__stage')).forEach(function (st) {
+    function tog() { var o = !st.classList.contains('open'); [].slice.call(document.querySelectorAll('.tc__stage.open')).forEach(function (x) { x.classList.remove('open'); }); if (o) st.classList.add('open'); }
+    st.addEventListener('click', function (e) { if (window.matchMedia('(hover: none)').matches) tog(); });
+    st.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); tog(); } });
+  });
+})();
+
 
 /* ===== Signum Rechner v3: Oberfläche ===== */
 (function () {
