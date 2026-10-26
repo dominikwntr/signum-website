@@ -731,6 +731,16 @@ p{text-wrap:pretty}
 .xh__kpis dd{color:var(--muted)}
 .xh::after{background:linear-gradient(90deg,rgba(247,244,237,.97) 0%,rgba(247,244,237,.88) 40%,rgba(247,244,237,.66) 70%,rgba(247,244,237,.5) 100%),linear-gradient(0deg,rgba(247,244,237,.78) 0%,rgba(247,244,237,0) 45%),linear-gradient(180deg,rgba(247,244,237,.6) 0%,rgba(247,244,237,0) 22%)}
 @media(max-width:899px){.xh::after{background:linear-gradient(180deg,rgba(247,244,237,.93) 0%,rgba(247,244,237,.85) 55%,rgba(247,244,237,.72) 100%)}}
+/* Hero Bewertungszeile mit Plattform Logos */
+.xh__rating--src{flex-wrap:wrap;gap:.6rem 1.1rem}
+.xh__src{display:inline-flex;align-items:center;gap:.4rem;white-space:nowrap}
+.xh__src-logo{width:17px;height:17px;flex:none}
+.xh__rating--src b{color:var(--ink);font-weight:600;margin-left:.15rem}
+.xh__rating--src span{color:var(--anthrazit);letter-spacing:0}
+.xh__rating--src em{font-style:normal;color:var(--muted)}
+.xh__rating--src em::before{content:"·";margin-right:.4rem;color:var(--muted)}
+.xh__rating--src i{width:1px;height:18px;background:rgba(20,20,20,.18)}
+@media(max-width:1199px){.xh__rating--src i{display:none}.xh__rating--src{flex-direction:column;align-items:flex-start;gap:.5rem}}
 
 
 /* =====================================================================
