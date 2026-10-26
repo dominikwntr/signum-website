@@ -72,6 +72,23 @@
         <a href="/#kontakt" class="btn btn--gold btn--lg rc__cta">Berechnung im Erstgespr&#228;ch pr&#252;fen lassen</a>
       </div>
     </div>
+    <div class="rc__more">
+      <button type="button" class="rc__morebtn" data-cmp-open aria-expanded="false">Neubau und Bestand vergleichen</button>
+      <button type="button" class="rc__morebtn" data-pdf-open aria-expanded="false">Ergebnis als PDF</button>
+    </div>
+    <div class="rc__cmp" data-cmp hidden>
+      <p class="rc__cmp-h">Steuerlicher Vergleich bei gleichen Eckdaten</p>
+      <div class="rc__cmpwrap"><table class="rc__cmptab"><thead><tr><th scope="col"><span class="sr-only">Kennzahl</span></th><th scope="col">Bestand<small>lineare AfA 2 %</small></th><th scope="col">Bestand mit Gutachten<small>lineare AfA 4 %</small></th><th scope="col">Neubau<small>degressiv 5 % und &#167; 7b</small></th></tr></thead><tbody data-cmp-body></tbody></table></div>
+      <p class="rc__small">Gleicher Kaufpreis, gleiche Miete und gleiche Finanzierung. Ver&#228;ndert wird nur die Abschreibung im ersten Jahr. Die Sonderabschreibung nach &#167; 7b EStG setzt voraus, dass das Objekt die gesetzlichen Bedingungen erf&#252;llt.</p>
+    </div>
+    <form class="rc__pdf" data-pdf hidden novalidate>
+      <p class="rc__cmp-h">Ihre Berechnung als PDF</p>
+      <p class="rc__small">Sie erhalten eine &#220;bersicht mit allen Annahmen und Ergebnissen zum Speichern und Ausdrucken. Auf Wunsch besprechen wir sie mit Ihnen.</p>
+      <div class="rc__pdfrow"><div class="form-field"><label for="rc-pdf-vn">Vorname</label><input id="rc-pdf-vn" name="vorname" type="text" autocomplete="given-name" required></div><div class="form-field"><label for="rc-pdf-em">E-Mail</label><input id="rc-pdf-em" name="email" type="email" autocomplete="email" required></div></div>
+      <label class="fx__check rc__pdfchk"><input type="checkbox" name="datenschutz" value="akzeptiert" required><span>Ich bin einverstanden, dass Signum mich zu meiner Berechnung kontaktieren darf. Hinweise in der <a href="/datenschutz" target="_blank" rel="noopener">Datenschutzerkl&#228;rung</a>.</span></label>
+      <button type="submit" class="btn btn--dark btn--lg">PDF herunterladen</button>
+      <p class="rc__pdfok" hidden>Ihr PDF wurde erstellt. Vielen Dank!</p>
+    </form>
     <details class="xk__method">
       <summary>So rechnen wir</summary>
       <div class="xk__method-grid">
