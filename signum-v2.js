@@ -243,7 +243,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
     /* Mobile Handlungsleiste */
     if (!document.querySelector('.sg-bar')) {
       var bar = document.createElement('div'); bar.className = 'sg-bar';
-      bar.innerHTML = '<a href="tel:+4953131057760"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>Anrufen</a><a href="' + (document.getElementById('kontakt') ? '#kontakt' : '/#kontakt') + '">Erstgespräch vereinbaren</a>';
+      bar.innerHTML = '<a href="tel:+4953131057760"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>Anrufen</a><a href="' + (document.getElementById('anfrage') ? '#anfrage' : '/#anfrage') + '">Erstgespräch vereinbaren</a>';
       document.body.appendChild(bar);
       var hide = $$('#kontakt, .footer, .xcta');
       var ub = function () {
@@ -557,6 +557,77 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
   });
 })();
 
+/* Sprung zum Fragebogen: auch alte Verweise auf #kontakt, robust gegen nachladende Bereiche */
+(function () {
+  function hit() { return location.hash === '#anfrage' || location.hash === '#kontakt'; }
+  function go(smooth) { var a = document.getElementById('anfrage'); if (!a) return; var y = a.getBoundingClientRect().top + window.scrollY - 96; window.scrollTo({ top: y, behavior: smooth ? 'smooth' : 'auto' }); }
+  if (hit()) {
+    var user = false; ['wheel', 'touchstart', 'keydown'].forEach(function (ev) { window.addEventListener(ev, function () { user = true; }, { once: true, passive: true }); });
+    [0, 250, 700, 1500, 2500].forEach(function (t) { setTimeout(function () { if (!user) go(false); }, t); });
+    window.addEventListener('load', function () { if (!user) go(false); });
+  }
+  window.addEventListener('hashchange', function () { if (hit()) go(true); });
+})();
+
+/* Einblenden beim Scrollen: Kette und Balken */
+(function () {
+  var els = [].slice.call(document.querySelectorAll('[data-chain],[data-bars]'));
+  els.forEach(function (el) { [].slice.call(el.children).forEach(function (c, i) { c.style.setProperty('--i', i); }); });
+  if (!('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('in'); }); return; }
+  var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); }, { threshold: .25 });
+  els.forEach(function (e) { io.observe(e); });
+})();
+
+/* Ratgeber: Lesefortschritt */
+(function () {
+  var bar = document.querySelector('.rgp i'), art = document.querySelector('.rgx'); if (!bar || !art) return;
+  function u() { var r = art.getBoundingClientRect(), h = r.height - window.innerHeight * 0.6; var p = Math.max(0, Math.min(1, -r.top / Math.max(1, h))); bar.style.transform = 'scaleX(' + p + ')'; }
+  window.addEventListener('scroll', u, { passive: true }); u();
+})();
+
+/* Ratgeber: Rechner in den Artikeln */
+(function () {
+  var de = new Intl.NumberFormat('de-DE');
+  var GR = { BW: 5, BY: 3.5, BE: 6, BB: 6.5, HB: 5.5, HH: 5.5, HE: 6, MV: 6, NI: 5, NW: 6.5, RP: 5, SL: 6.5, SN: 5.5, ST: 5, SH: 6.5, TH: 5 };
+  function eur(n) { return de.format(Math.round(n)) + ' €'; }
+  function pct(n) { return n.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + ' %'; }
+  function num(v) { v = String(v).replace(/\./g, '').replace(',', '.').replace(/[^\d.]/g, ''); return parseFloat(v) || 0; }
+  var F = {
+    'sonder-afa-7b': function (g) {
+      var a = g('area'), c = g('cost'), t = g('tax') / 100, ok = a > 0 && c / a <= 5200;
+      var son = ok ? Math.min(c, 4000 * a) * 0.05 : 0, rest = c, deg4 = 0, d1 = 0;
+      for (var y = 1; y <= 4; y++) { var d = rest * 0.05; if (y === 1) d1 = d; deg4 += d; rest -= d + son; }
+      return { sum1: eur(d1 + son), sonder: ok ? eur(son) : 'entfällt, über 5.200 €/m²', save1: eur((d1 + son) * t), sum4: eur(deg4 + son * 4), _warn: ok ? '' : 'sonder' };
+    },
+    'degressive-afa': function (g) {
+      var c = g('cost'), n = Math.max(1, Math.min(33, Math.round(g('years')))), t = g('tax') / 100;
+      var deg = c * (1 - Math.pow(0.95, n)), lin = Math.min(c, c * 0.03 * n);
+      return { diff: eur(deg - lin), deg: eur(deg), lin: eur(lin), save: eur((deg - lin) * t) };
+    },
+    'restnutzungsdauer-gutachten': function (g) {
+      var b = g('basis'), r = Math.max(1, g('rnd')), t = g('tax') / 100, afa = b / r, mehr = Math.max(0, afa - b * 0.02);
+      return { save: eur(mehr * t), rate: pct(100 / r), afa: eur(afa), mehr: eur(mehr) };
+    },
+    'kfw-foerderung-neubau': function (g, root) {
+      var je = parseFloat(root.querySelector('[data-k="stufe"]').value) || 0, u = Math.max(0, Math.round(g('units')));
+      return { kredit: eur(je * u), je: eur(je) };
+    },
+    'kaufnebenkosten': function (g, root) {
+      var p = g('price'), bl = root.querySelector('[data-k="bl"]').value, mk = root.querySelector('[data-k="makler"]').checked;
+      var gr = p * GR[bl] / 100, no = p * 0.02, ma = mk ? p * 0.0357 : 0;
+      return { sum: eur(gr + no + ma), grest: eur(gr) + ' (' + pct(GR[bl]) + ')', notar: eur(no), makler: eur(ma) };
+    }
+  };
+  [].slice.call(document.querySelectorAll('[data-rgc]')).forEach(function (root) {
+    var fn = F[root.getAttribute('data-rgc')]; if (!fn) return;
+    function g(k) { var el = root.querySelector('[data-k="' + k + '"]'); return el ? num(el.value) : 0; }
+    function run() { var r = fn(g, root); Object.keys(r).forEach(function (k) { var o = root.querySelector('[data-o="' + k + '"]'); if (o) o.textContent = r[k]; }); [].slice.call(root.querySelectorAll('[data-o]')).forEach(function (o) { o.classList.toggle('rgc__warn', r._warn === o.getAttribute('data-o')); }); }
+    root.addEventListener('input', run); root.addEventListener('change', run);
+    [].slice.call(root.querySelectorAll('input[type=text]')).forEach(function (el) { el.addEventListener('blur', function () { var v = num(el.value); el.value = v >= 1000 ? de.format(v) : String(v).replace('.', ','); run(); }); el.addEventListener('focus', function () { el.select(); }); });
+    run();
+  });
+})();
+
 
 /* ===== Signum Rechner v3: Oberfläche ===== */
 (function () {
@@ -670,7 +741,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
       chart(root.querySelector('[data-chart]'), f.serie, years);
       var sh = root.querySelector('[data-sonder-hint]'); if (sh) sh.hidden = !j.sonder;
       var cta = root.querySelector('.rc__cta');
-      if (cta) cta.href = '/?berechnung=' + encodeURIComponent('Kaufpreis ' + eur(j.price) + ', Kaltmiete ' + eur(j.rent) + ', Eigenkapital ' + eur(j.equity) + ', Zins ' + pct(j.rate, 1) + ', Tilgung ' + pct(j.tilg, 1) + ', Cashflow nach Steuern ' + sEur(f.cfNachM) + ' pro Monat') + '#kontakt';
+      if (cta) cta.href = '/?berechnung=' + encodeURIComponent('Kaufpreis ' + eur(j.price) + ', Kaltmiete ' + eur(j.rent) + ', Eigenkapital ' + eur(j.equity) + ', Zins ' + pct(j.rate, 1) + ', Tilgung ' + pct(j.tilg, 1) + ', Cashflow nach Steuern ' + sEur(f.cfNachM) + ' pro Monat') + '#anfrage';
     }
     /* Vergleich Neubau und Bestand */
     var cmpBox = root.querySelector('[data-cmp]'), cmpBtn = root.querySelector('[data-cmp-open]');
@@ -722,9 +793,9 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
       }
       pdfForm.addEventListener('submit', function (e) {
         e.preventDefault(); if (!pdfForm.checkValidity()) { pdfForm.reportValidity(); return; }
-        var j = root._j, f = root._f, name = pdfForm.vorname.value.trim();
+        var j = root._j, f = root._f, vn = pdfForm.vorname.value.trim(), nn = pdfForm.nachname.value.trim(), name = (vn + ' ' + nn).trim();
         var sum = 'Kaufpreis ' + eur(j.price) + ', Kaltmiete ' + eur(j.rent) + ', Eigenkapital ' + eur(j.equity) + ', Zins ' + pct(j.rate, 1) + ', Tilgung ' + pct(j.tilg, 1) + ', Cashflow nach Steuern ' + sEur(f.cfNachM) + ' pro Monat';
-        var d = new URLSearchParams({ vorname: name, email: pdfForm.email.value.trim(), datenschutz: 'akzeptiert', interesse: 'Kapitalanlage Immobilie', berechnung: sum, nachricht: 'PDF aus dem Renditerechner angefordert\nBerechnung: ' + sum, seite: location.pathname, quelle: 'Website Rechner PDF' });
+        var d = new URLSearchParams({ vorname: vn, nachname: nn, email: pdfForm.email.value.trim(), datenschutz: 'akzeptiert', interesse: 'Kapitalanlage Immobilie', berechnung: sum, nachricht: 'PDF aus dem Renditerechner angefordert\nBerechnung: ' + sum, seite: location.pathname, quelle: 'Website Rechner PDF' });
         try { var at = JSON.parse(localStorage.getItem('sg_attr') || '{}'); for (var k in at) d.append(k, at[k]); } catch (x) {}
         fetch('https://hooks.zapier.com/hooks/catch/24642695/43b965c/', { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: d.toString() }).catch(function () {});
         if (window.fbq) window.fbq('track', 'Lead', { content_name: 'Rechner PDF' });
