@@ -1249,7 +1249,7 @@ p{text-wrap:pretty}
 /* Teamseite hell: Kopfbereich */
 .ts{background:radial-gradient(120% 90% at 50% 0%,#FBF8F2 0%,#EFE8DC 55%,#E4DACA 100%);color:var(--ink)}
 .ts .xh__kicker{color:var(--muted);border-bottom-color:rgba(20,20,20,.15)} .ts .xh__kicker span:first-child{color:var(--messing)}
-.ts__title{color:var(--ink)} .ts__lead{color:var(--anthrazit)}
+.ts .ts__title{color:var(--ink)} .ts .ts__lead{color:var(--anthrazit)}
 .ts__lineup img{filter:drop-shadow(0 16px 22px rgba(60,45,25,.22))}
 .ts::after{background:linear-gradient(0deg,var(--elfenbein),rgba(247,244,237,0))}
 /* Teamseite hell: Geschäftsführung, Beirat, Bereiche */
@@ -1267,3 +1267,28 @@ p{text-wrap:pretty}
 .tk{border-top:1px solid var(--line)}
 :root{--stage-portrait:radial-gradient(90% 60% at 50% 0%,rgba(255,214,150,.55) 0%,rgba(255,214,150,0) 70%),linear-gradient(180deg,#EDA840 0%,#D4A46A 30%,#A9998A 62%,#8F857B 100%)}
 .tg__stage,.tc__stage{background:var(--stage-portrait)}
+
+/* ---------- Kundenstimmen hell und ruhig (Runde 7) ---------- */
+.kh{background:radial-gradient(120% 90% at 50% 0%,#FBF8F2 0%,#EFE8DC 55%,#E4DACA 100%);color:var(--ink)}
+.kh .xh__kicker{color:var(--muted);border-bottom-color:rgba(20,20,20,.15)} .kh .xh__kicker span:first-child{color:var(--messing)}
+.kh .ts__title{color:var(--ink)} .kh .ts__lead{color:var(--anthrazit)}
+.kh__score>b{color:var(--ink)} .kh__score div{color:var(--muted)}
+.kq{background:var(--white);color:var(--ink);padding:clamp(3.5rem,7vw,6rem) 0;border-bottom:1px solid var(--line)}
+.kq__inner{display:grid;grid-template-columns:1fr;gap:2rem}
+@media(min-width:900px){.kq__inner{grid-template-columns:16rem 1fr;gap:4rem}}
+.kq__side{display:flex;flex-direction:column;gap:1.5rem}
+.kq__side .kq__ctrl{margin-top:0;justify-content:flex-start;gap:1.5rem}
+.kq__bars{margin-bottom:clamp(1.75rem,3vw,2.5rem)}
+.kq__bars i{background:rgba(20,20,20,.1)}
+.kq__stage{min-height:0}
+.kq__stars{color:var(--gold);letter-spacing:.2em;font-size:.85rem;margin-bottom:.9rem}
+.kq__t{font-family:var(--font-head);font-weight:600;font-size:clamp(1.3rem,2vw,1.75rem);line-height:1.25;letter-spacing:-.025em;text-transform:none;color:var(--ink);margin-bottom:1rem}
+.kq__q{font-family:var(--font-body,Inter),sans-serif;font-weight:400;font-size:clamp(1rem,1.2vw,1.1rem);line-height:1.8;letter-spacing:0;color:var(--anthrazit);max-width:68ch}
+.kq .xq__slide figcaption{border-top-color:var(--line);margin-top:1.75rem}
+.kq .xq__slide figcaption b{color:var(--ink)} .kq .xq__slide figcaption span{color:var(--muted)}
+.kq__count{color:var(--muted)}
+.kq__btn{color:var(--ink);border-color:rgba(20,20,20,.25)}
+.kq__btn:hover{background:var(--ink);color:var(--white);border-color:var(--ink)}
+.kq__marquee{display:none}
+.kh .ts__title{font-size:clamp(2.3rem,10.5vw,8.5rem)}
+.kq__q{max-width:76ch}
