@@ -1,70 +1,87 @@
-<!-- RENDITERECHNER (vollst&#228;ndig) -->
-<section class="xk xk--full" id="renditerechner" data-sgcalc="full">
-  <div class="xk__head">
-    <p class="xlabel">Renditerechner <span>Modellrechnung Jahr 1 und 10 Jahre</span></p>
-    <h2 class="xs__title">Was Ihre Immobilie<br>wirklich erwirtschaftet.</h2>
-    <p class="xk__intro">Kaufnebenkosten, Annuit&#228;tendarlehen, Bewirtschaftung, Abschreibung und Steuereffekt in einer Rechnung. Jeder Rechenschritt ist unten offengelegt.</p>
-  </div>
-  <div class="xk__grid">
-    <div class="xk__inputs">
-      <fieldset class="xfs"><legend>Objekt</legend>
-        <label class="xin"><span class="xin__l">Kaufpreis</span><span class="xin__f"><input data-in="price" type="text" inputmode="numeric" value="200.000"><i>&#8364;</i></span></label>
-        <div class="xfs__2"><label class="xin"><span class="xin__l">Wohnfl&#228;che</span><span class="xin__f"><input data-in="area" type="text" inputmode="numeric" value="60"><i>m&#178;</i></span></label><label class="xin"><span class="xin__l">Kaltmiete pro Monat</span><span class="xin__f"><input data-in="rent" type="text" inputmode="numeric" value="850"><i>&#8364;</i></span></label></div>
-        <label class="xin xin--sel"><span class="xin__l">Bundesland, f&#252;r die Grunderwerbsteuer</span><select data-in="bl"><option value="BW">Baden-W&#252;rttemberg (5,0 %)</option><option value="BY">Bayern (3,5 %)</option><option value="BE">Berlin (6,0 %)</option><option value="BB">Brandenburg (6,5 %)</option><option value="HB">Bremen (5,5 %)</option><option value="HH">Hamburg (5,5 %)</option><option value="HE">Hessen (6,0 %)</option><option value="MV">Mecklenburg-Vorpommern (6,0 %)</option><option value="NI" selected>Niedersachsen (5,0 %)</option><option value="NW">Nordrhein-Westfalen (6,5 %)</option><option value="RP">Rheinland-Pfalz (5,0 %)</option><option value="SL">Saarland (6,5 %)</option><option value="SN">Sachsen (5,5 %)</option><option value="ST">Sachsen-Anhalt (5,0 %)</option><option value="SH">Schleswig-Holstein (6,5 %)</option><option value="TH">Th&#252;ringen (5,0 %)</option></select></label>
-      </fieldset>
-      <fieldset class="xfs"><legend>Finanzierung</legend>
-        <label class="xin"><span class="xin__l">Eigenkapital</span><span class="xin__f"><input data-in="equity" type="text" inputmode="numeric" value="40.000"><i>&#8364;</i></span></label>
-        <label class="xin xin--range"><span class="xin__l">Sollzins <b data-out="rateLbl"></b></span><input data-in="rate" type="range" min="1" max="7" step="0.1" value="3.8"></label>
-        <label class="xin xin--range"><span class="xin__l">Anf&#228;ngliche Tilgung <b data-out="tilgLbl"></b></span><input data-in="tilg" type="range" min="1" max="5" step="0.1" value="2"></label>
-      </fieldset>
-      <fieldset class="xfs"><legend>Bewirtschaftung</legend>
-        <label class="xin xin--range"><span class="xin__l">Verwaltung, nicht umlagef&#228;hig, pro Monat <b data-out="mgmtLbl"></b></span><input data-in="mgmt" type="range" min="0" max="100" step="5" value="30"></label>
-        <label class="xin xin--range"><span class="xin__l">Instandhaltung pro m&#178; und Monat <b data-out="instandLbl"></b></span><input data-in="instand" type="range" min="0" max="3" step="0.1" value="1"></label>
-      </fieldset>
-      <fieldset class="xfs"><legend>Steuer und Annahmen</legend>
-        <label class="xin xin--range"><span class="xin__l">Geb&#228;udeanteil am Kaufpreis <b data-out="gebLbl"></b></span><input data-in="gebaeude" type="range" min="50" max="95" step="1" value="80"></label>
-        <label class="xin xin--sel"><span class="xin__l">Grundlage der Abschreibung</span><select data-afa-art><option value="bestand" selected>Bestand, linear (2 %)</option><option value="gutachten">Bestand mit Restnutzungsdauergutachten (3 bis 5 %)</option><option value="neubau">Neubau, linear (3 %)</option><option value="degressiv">Neubau, degressiv (5 %)</option></select></label>
-        <label class="xin xin--range"><span class="xin__l">AfA Satz im ersten Jahr <b data-out="afaLbl"></b></span><input data-in="afa" type="range" min="1" max="6" step="0.5" value="2"></label>
-        <label class="xchk"><input type="checkbox" data-in="sonder"><span>Sonderabschreibung nach &#167; 7b EStG zus&#228;tzlich (5 % p.a., Jahr 1 bis 4)</span></label>
-        <p class="xk__hint" data-sonder-hint hidden>Nur f&#252;r neu geschaffene Mietwohnungen im Standard EH 40 mit QNG, Bauantrag ab 2023, Baukosten h&#246;chstens 5.200 &#8364;/m&#178;. Bemessungsgrundlage h&#246;chstens 4.000 &#8364;/m&#178; Wohnfl&#228;che.</p>
-        <label class="xin xin--range"><span class="xin__l">Pers&#246;nlicher Grenzsteuersatz <b data-out="taxLbl"></b></span><input data-in="tax" type="range" min="0" max="45" step="1" value="42"></label>
-        <label class="xin xin--range"><span class="xin__l">Wertentwicklung pro Jahr <b data-out="wertLbl"></b></span><input data-in="wert" type="range" min="0" max="5" step="0.5" value="2"></label>
-      </fieldset>
-    </div>
-    <div class="xk__out">
-      <div class="xk__sticky">
-        <p class="xk__lbl">Monatlicher Cashflow nach Steuern</p>
-        <p class="xk__big" data-out="cashflow">+ 0 &#8364;</p>
-        <dl class="xk__wf">
-          <div><dt>Kaltmiete</dt><dd data-out="rentOut">850 &#8364;</dd></div>
-          <div><dt>Kreditrate (Zins und Tilgung)</dt><dd data-out="rateMneg">0 &#8364;</dd></div>
-          <div><dt>Verwaltung und Instandhaltung</dt><dd data-out="kostenMneg">0 &#8364;</dd></div>
-          <div class="is-sub"><dt>Cashflow vor Steuern</dt><dd data-out="cfVor">0 &#8364;</dd></div>
-          <div><dt>Steuereffekt</dt><dd data-out="steuerM">0 &#8364;</dd></div>
-        </dl>
-        <dl class="xk__metrics xk__metrics--grid">
-          <div><dt data-out="brutto">0 %</dt><dd>Bruttomietrendite</dd></div>
-          <div><dt data-out="netto">0 %</dt><dd>Nettomietrendite auf Gesamtkosten</dd></div>
-          <div><dt data-out="ek">0 %</dt><dd>Eigenkapitalrendite inkl. Tilgung</dd></div>
-          <div><dt data-out="tilgJ">0 &#8364;</dt><dd>Tilgung im ersten Jahr</dd></div>
-        </dl>
-        <div class="xk__ten">
-          <p class="xk__lbl">Nach 10 Jahren</p>
-          <dl><div><dt>Immobilienwert</dt><dd data-out="wert10">0 &#8364;</dd></div><div><dt>Restschuld</dt><dd data-out="rest10">0 &#8364;</dd></div><div class="is-sub"><dt>Ihr Verm&#246;gen in der Immobilie</dt><dd data-out="verm10">0 &#8364;</dd></div></dl>
+<!-- RENDITERECHNER -->
+<section class="rc" id="renditerechner" data-rc="full">
+  <div class="rc__wrap">
+    <header class="rc__head">
+      <div><p class="xlabel">Renditerechner</p><h2 class="xs__title">Renditeberechnung f&#252;r Ihre Kapitalanlage</h2></div>
+      <p class="rc__intro">Kaufnebenkosten, Finanzierung, Bewirtschaftung und Steuereffekt in einer Modellrechnung. Passen Sie die Werte an Ihr Objekt an, das Ergebnis aktualisiert sich sofort.</p>
+    </header>
+    <div class="rc__app">
+      <div class="rc__panel">
+        <div class="rc__tabs" role="tablist">
+          <button type="button" role="tab" class="on" data-tab="objekt"><b>1</b> Objekt</button>
+          <button type="button" role="tab" data-tab="fin"><b>2</b> Finanzierung</button>
+          <button type="button" role="tab" data-tab="steuer"><b>3</b> Steuer</button>
         </div>
-        <a href="/#kontakt" class="btn btn--gold btn--lg">Rechnung im Erstgespr&#228;ch pr&#252;fen lassen</a>
+        <div class="rc__pane on" data-pane="objekt">
+          <div class="cf"><label class="cf__l" for="rc-price">Kaufpreis</label><div class="cf__box"><input id="rc-price" data-in="price" type="text" inputmode="decimal" value="200.000" autocomplete="off"><span>&#8364;</span></div></div>
+          <div class="cf__2"><div class="cf"><label class="cf__l" for="rc-area">Wohnfl&#228;che</label><div class="cf__box"><input id="rc-area" data-in="area" type="text" inputmode="decimal" value="60" autocomplete="off"><span>m&#178;</span></div></div><div class="cf"><label class="cf__l" for="rc-rent">Kaltmiete</label><div class="cf__box"><input id="rc-rent" data-in="rent" type="text" inputmode="decimal" value="850" autocomplete="off"><span>&#8364;/Monat</span></div></div></div>
+          <div class="cf"><label class="cf__l" for="rc-bl">Bundesland</label><div class="cf__box cf__box--sel"><select id="rc-bl" data-in="bl"><option value="BW">Baden-W&#252;rttemberg (5,0 %)</option><option value="BY">Bayern (3,5 %)</option><option value="BE">Berlin (6,0 %)</option><option value="BB">Brandenburg (6,5 %)</option><option value="HB">Bremen (5,5 %)</option><option value="HH">Hamburg (5,5 %)</option><option value="HE">Hessen (6,0 %)</option><option value="MV">Mecklenburg-Vorpommern (6,0 %)</option><option value="NI" selected>Niedersachsen (5,0 %)</option><option value="NW">Nordrhein-Westfalen (6,5 %)</option><option value="RP">Rheinland-Pfalz (5,0 %)</option><option value="SL">Saarland (6,5 %)</option><option value="SN">Sachsen (5,5 %)</option><option value="ST">Sachsen-Anhalt (5,0 %)</option><option value="SH">Schleswig-Holstein (6,5 %)</option><option value="TH">Th&#252;ringen (5,0 %)</option></select></div></div>
+          <div class="cf cf--range"><label class="cf__l" for="rc-mgmt">Verwaltung<span class="cf__hint">nicht umlagef&#228;hig</span></label><div class="cf__row"><input type="range" data-range="mgmt" min="0" max="100" step="5" value="30" aria-label="Verwaltung"><div class="cf__box cf__box--s"><input id="rc-mgmt" data-in="mgmt" type="text" inputmode="decimal" value="30" autocomplete="off"><span>&#8364;/Monat</span></div></div></div>
+          <div class="cf cf--range"><label class="cf__l" for="rc-instand">Instandhaltung<span class="cf__hint">pro Monat</span></label><div class="cf__row"><input type="range" data-range="instand" min="0" max="3" step="0.1" value="1" aria-label="Instandhaltung"><div class="cf__box cf__box--s"><input id="rc-instand" data-in="instand" type="text" inputmode="decimal" value="1" autocomplete="off"><span>&#8364;/m&#178;</span></div></div></div>
+          <button type="button" class="rc__next" data-goto="fin">Weiter zur Finanzierung</button>
+        </div>
+        <div class="rc__pane" data-pane="fin">
+          <div class="cf"><label class="cf__l" for="rc-equity">Eigenkapital<span class="cf__hint">deckt zuerst die Nebenkosten</span></label><div class="cf__box"><input id="rc-equity" data-in="equity" type="text" inputmode="decimal" value="40.000" autocomplete="off"><span>&#8364;</span></div></div>
+          <div class="cf cf--range"><label class="cf__l" for="rc-rate">Sollzins</label><div class="cf__row"><input type="range" data-range="rate" min="0" max="8" step="0.1" value="3.8" aria-label="Sollzins"><div class="cf__box cf__box--s"><input id="rc-rate" data-in="rate" type="text" inputmode="decimal" value="3,8" autocomplete="off"><span>% p.a.</span></div></div></div>
+          <div class="cf cf--range"><label class="cf__l" for="rc-tilg">Anf&#228;ngliche Tilgung</label><div class="cf__row"><input type="range" data-range="tilg" min="0" max="6" step="0.1" value="2" aria-label="Anf&#228;ngliche Tilgung"><div class="cf__box cf__box--s"><input id="rc-tilg" data-in="tilg" type="text" inputmode="decimal" value="2" autocomplete="off"><span>% p.a.</span></div></div></div>
+          <dl class="rc__facts"><div><dt>Kaufnebenkosten</dt><dd data-out="neben">0 &#8364;</dd></div><div><dt>Darlehen</dt><dd data-out="loan">0 &#8364;</dd></div><div><dt>Rate pro Monat</dt><dd data-out="rateM">0 &#8364;</dd></div></dl>
+          <p class="rc__tip">Barkauf oder Vollfinanzierung: Eigenkapital entsprechend setzen. Zins und Tilgung lassen sich bis 0 % einstellen.</p>
+          <button type="button" class="rc__next" data-goto="steuer">Weiter zur Steuer</button>
+        </div>
+        <div class="rc__pane" data-pane="steuer">
+          <div class="cf"><label class="cf__l" for="rc-afaArt">Abschreibung</label><div class="cf__box cf__box--sel"><select id="rc-afaArt" data-in="afaArt"><option value="bestand" selected>Bestand, linear 2 %</option><option value="alt">Bestand vor 1925, linear 2,5 %</option><option value="gutachten">Bestand mit Restnutzungsdauergutachten</option><option value="neubau">Neubau, linear 3 %</option><option value="degressiv">Neubau, degressiv 5 %</option></select></div></div>
+          <div class="cf cf--range"><label class="cf__l" for="rc-afa">AfA Satz</label><div class="cf__row"><input type="range" data-range="afa" min="0" max="10" step="0.5" value="2" aria-label="AfA Satz"><div class="cf__box cf__box--s"><input id="rc-afa" data-in="afa" type="text" inputmode="decimal" value="2" autocomplete="off"><span>%</span></div></div></div>
+          <div class="cf cf--range"><label class="cf__l" for="rc-gebaeude">Geb&#228;udeanteil<span class="cf__hint">am Kaufpreis</span></label><div class="cf__row"><input type="range" data-range="gebaeude" min="50" max="95" step="1" value="80" aria-label="Geb&#228;udeanteil"><div class="cf__box cf__box--s"><input id="rc-gebaeude" data-in="gebaeude" type="text" inputmode="decimal" value="80" autocomplete="off"><span>%</span></div></div></div>
+          <label class="cf__chk"><input type="checkbox" data-in="sonder"><span>Sonderabschreibung nach &#167; 7b EStG (5 % p.a. zus&#228;tzlich, Jahr 1 bis 4)</span></label>
+          <p class="rc__tip" data-sonder-hint hidden>Nur f&#252;r neu geschaffene Mietwohnungen im Standard EH 40 mit QNG, Bauantrag ab 2023, Baukosten h&#246;chstens 5.200 &#8364;/m&#178;. Bemessungsgrundlage h&#246;chstens 4.000 &#8364;/m&#178; Wohnfl&#228;che.</p>
+          <div class="cf cf--range"><label class="cf__l" for="rc-tax">Grenzsteuersatz</label><div class="cf__row"><input type="range" data-range="tax" min="0" max="45" step="1" value="42" aria-label="Grenzsteuersatz"><div class="cf__box cf__box--s"><input id="rc-tax" data-in="tax" type="text" inputmode="decimal" value="42" autocomplete="off"><span>%</span></div></div></div>
+          <div class="cf cf--range"><label class="cf__l" for="rc-wert">Wertentwicklung</label><div class="cf__row"><input type="range" data-range="wert" min="0" max="5" step="0.5" value="2" aria-label="Wertentwicklung"><div class="cf__box cf__box--s"><input id="rc-wert" data-in="wert" type="text" inputmode="decimal" value="2" autocomplete="off"><span>% p.a.</span></div></div></div>
+        </div>
+      </div>
+      <div class="rc__res">
+        <div class="rc__kpis">
+          <div class="rc__kpi rc__kpi--main"><span>Cashflow nach Steuern</span><b data-out="cashflow">0 &#8364;</b><small>pro Monat im ersten Jahr</small></div>
+          <div class="rc__kpi"><span>Bruttomietrendite</span><b data-out="brutto">0 %</b><small>Jahresmiete zu Kaufpreis</small></div>
+          <div class="rc__kpi"><span>Eigenkapitalrendite</span><b data-out="ek">0 %</b><small>inklusive Tilgung</small></div>
+        </div>
+        <div class="rc__tables">
+          <table class="rc__t">
+            <caption>Monatlich im ersten Jahr</caption>
+            <tr><th>Kaltmiete</th><td data-out="t_rent">0 &#8364;</td></tr>
+            <tr><th>Zinsen</th><td data-out="t_zins">0 &#8364;</td></tr>
+            <tr><th>Tilgung</th><td data-out="t_tilg">0 &#8364;</td></tr>
+            <tr><th>Verwaltung und Instandhaltung</th><td data-out="t_kosten">0 &#8364;</td></tr>
+            <tr class="is-sum"><th>&#220;berschuss vor Steuern</th><td data-out="t_vor">0 &#8364;</td></tr>
+            <tr><th>Steuereffekt</th><td data-out="t_steuer">0 &#8364;</td></tr>
+            <tr class="is-total"><th>Cashflow nach Steuern</th><td data-out="t_nach">0 &#8364;</td></tr>
+          </table>
+          <table class="rc__t">
+            <caption>Investition</caption>
+            <tr><th>Kaufpreis</th><td data-out="i_price">0 &#8364;</td></tr>
+            <tr><th>Nebenkosten <span data-out="i_nebenPct"></span></th><td data-out="i_neben">0 &#8364;</td></tr>
+            <tr class="is-sum"><th>Gesamtkosten</th><td data-out="i_gesamt">0 &#8364;</td></tr>
+            <tr><th>Eigenkapital</th><td data-out="i_ek">0 &#8364;</td></tr>
+            <tr class="is-total"><th>Darlehen</th><td data-out="i_loan">0 &#8364;</td></tr>
+          </table>
+        </div>
+        <div class="rc__chart">
+          <div class="rc__chart-head"><p>Verm&#246;gensentwicklung</p><div class="rc__seg" role="group" aria-label="Zeitraum"><button type="button" data-years="10" class="on">10 J.</button><button type="button" data-years="20">20 J.</button><button type="button" data-years="30">30 J.</button></div></div>
+          <div class="rc__svg" data-chart></div>
+          <ul class="rc__legend"><li><i class="l-wert"></i>Immobilienwert <b data-out="c_wert">0 &#8364;</b></li><li><i class="l-rest"></i>Restschuld <b data-out="c_rest">0 &#8364;</b></li><li><i class="l-netto"></i>Ihr Verm&#246;gen in der Immobilie <b data-out="c_netto">0 &#8364;</b></li></ul>
+        </div>
+        <a href="/#kontakt" class="btn btn--gold btn--lg rc__cta">Berechnung im Erstgespr&#228;ch pr&#252;fen lassen</a>
       </div>
     </div>
+    <details class="xk__method">
+      <summary>So rechnen wir</summary>
+      <div class="xk__method-grid">
+        <p><b>Kaufnebenkosten</b>: Grunderwerbsteuer des Bundeslandes plus 2 % f&#252;r Notar und Grundbuch. Eine Maklerprovision f&#228;llt bei Signum nicht an.</p>
+        <p><b>Darlehen</b>: Kaufpreis plus Nebenkosten abz&#252;glich Eigenkapital. Zins und Tilgung werden Monat f&#252;r Monat als Annuit&#228;t fortgeschrieben, auch mit 0 % Zins oder 0 % Tilgung.</p>
+        <p><b>Abschreibung</b>: Nur der Geb&#228;udeanteil inklusive anteiliger Nebenkosten ist abschreibbar, Grund und Boden nicht. Die Sonderabschreibung nach &#167; 7b ist auf 4.000 &#8364;/m&#178; Wohnfl&#228;che gedeckelt.</p>
+        <p><b>Steuereffekt</b>: Mieteinnahmen abz&#252;glich Zinsen, Abschreibung, Verwaltung und Instandhaltung, bewertet mit Ihrem Grenzsteuersatz. Ein negativer Wert bedeutet eine Steuerlast.</p>
+        <p><b>Eigenkapitalrendite</b>: Cashflow nach Steuern plus Tilgung des ersten Jahres, bezogen auf das eingesetzte Eigenkapital.</p>
+        <p><b>Grenzen</b>: Vereinfachte Modellrechnung ohne Mietsteigerung, Leerstand, Kirchensteuer und Solidarit&#228;tszuschlag. Keine Anlageberatung und keine Steuerberatung.</p>
+      </div>
+    </details>
   </div>
-  <details class="xk__method">
-    <summary>So rechnen wir</summary>
-    <div class="xk__method-grid">
-      <p><b>Kaufnebenkosten</b> <span data-out="nebenTxt"></span>: Grunderwerbsteuer des Bundeslandes plus 2 % f&#252;r Notar und Grundbuch. Eine Maklerprovision f&#228;llt bei Signum nicht an.</p>
-      <p><b>Darlehen</b> <span data-out="loanTxt"></span>: Kaufpreis plus Nebenkosten abz&#252;glich Eigenkapital. Das Eigenkapital deckt zuerst die Nebenkosten. Zins und Tilgung werden Monat f&#252;r Monat als Annuit&#228;t fortgeschrieben.</p>
-      <p><b>Abschreibung</b> <span data-out="afaTxt"></span>: Nur der Geb&#228;udeanteil inklusive anteiliger Nebenkosten ist abschreibbar, Grund und Boden nicht. Die Sonderabschreibung nach &#167; 7b ist auf 4.000 &#8364;/m&#178; Wohnfl&#228;che gedeckelt.</p>
-      <p><b>Steuereffekt</b>: Mieteinnahmen abz&#252;glich Zinsen, Abschreibung, Verwaltung und Instandhaltung, bewertet mit Ihrem Grenzsteuersatz. Ein negativer Wert bedeutet eine Steuerlast.</p>
-      <p><b>Eigenkapitalrendite</b>: Cashflow nach Steuern plus Tilgung des ersten Jahres, bezogen auf das eingesetzte Eigenkapital.</p>
-      <p><b>Grenzen</b>: Vereinfachte Modellrechnung f&#252;r das erste Jahr, ohne Mietsteigerung, Leerstand, Kirchensteuer und Solidarit&#228;tszuschlag. Keine Anlageberatung und keine Steuerberatung.</p>
-    </div>
-  </details>
 </section>
