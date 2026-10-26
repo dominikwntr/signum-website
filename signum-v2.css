@@ -1123,9 +1123,9 @@ p{text-wrap:pretty}
 .tc__stage{background:var(--stage);border-radius:4px;aspect-ratio:4/5;overflow:hidden;display:flex;align-items:flex-end;justify-content:center}
 .tc__stage img{height:92%;width:auto;max-width:100%;object-fit:contain;object-position:bottom;transition:transform 1s var(--ease)}
 .tc__info{padding-top:.9rem}
-.tc__info h4{font-family:var(--font-head);font-weight:600;font-size:1.05rem;color:var(--elfenbein)}
+.tc__info h3,.tc__info h4{font-family:var(--font-head);font-weight:600;font-size:1.05rem;color:var(--elfenbein)}
 .tc__info p{font-size:.8rem;color:rgba(247,244,237,.6);margin-top:.2rem;line-height:1.45;min-height:2.4em}
-.tc__info a{display:inline-block;margin-top:.5rem;padding:.25rem 0;font-size:.74rem;color:var(--gold);word-break:break-all}
+.tc__info a{display:inline-block;margin-top:.5rem;padding:.25rem 0;font-size:.74rem;color:var(--gold);overflow-wrap:anywhere}
 .tdx__partner{margin-top:clamp(3.5rem,7vw,5rem);padding:1.5rem 1.75rem;border:1px solid var(--line-dark);border-radius:4px}
 .tdx__partner .xlabel{margin-bottom:.75rem}
 .tdx__partner p:not(.xlabel){color:rgba(247,244,237,.72);line-height:1.7;max-width:80ch}
@@ -1244,3 +1244,24 @@ p{text-wrap:pretty}
 .xt__f b{font-family:var(--font-head);font-weight:600;font-size:clamp(.8rem,1.2vw,1rem);color:var(--elfenbein)}
 .xt__f span{font-size:clamp(.66rem,.9vw,.76rem);color:var(--gold)}
 @media(min-width:900px){.xt__stage{grid-template-columns:repeat(6,1fr)}.xt__f:nth-child(3) img{width:128%}}
+
+/* ---------- Teamseite hell (Runde 6) ---------- */
+/* Teamseite hell: Kopfbereich */
+.ts{background:radial-gradient(120% 90% at 50% 0%,#FBF8F2 0%,#EFE8DC 55%,#E4DACA 100%);color:var(--ink)}
+.ts .xh__kicker{color:var(--muted);border-bottom-color:rgba(20,20,20,.15)} .ts .xh__kicker span:first-child{color:var(--messing)}
+.ts__title{color:var(--ink)} .ts__lead{color:var(--anthrazit)}
+.ts__lineup img{filter:drop-shadow(0 16px 22px rgba(60,45,25,.22))}
+.ts::after{background:linear-gradient(0deg,var(--elfenbein),rgba(247,244,237,0))}
+/* Teamseite hell: Geschäftsführung, Beirat, Bereiche */
+.tg{background:var(--elfenbein);color:var(--ink)}
+.tg .xlabel--light,.tdx .xlabel--light{color:var(--messing)}
+.tg__n{color:var(--ink)} .tg__r{color:var(--messing)} .tg__bio{color:var(--anthrazit)}
+.tg__quote{color:var(--ink);border-top-color:var(--line)}
+.tg .xarrow--light{color:var(--ink)}
+.tg__member figcaption{border-top-color:var(--line)} .tg__member b{color:var(--ink)} .tg__member span{color:var(--messing)}
+.tdx{background:var(--elfenbein);color:var(--ink)}
+.tdx__head{border-bottom-color:rgba(20,20,20,.15)} .tdx__no{color:var(--messing)}
+.tdx__head h2{color:var(--ink)} .tdx__head p{color:var(--muted)} .tdx__count{color:var(--muted)}
+.tc__info h3,.tc__info h4{color:var(--ink)} .tc__info p{color:var(--muted)} .tc__info a{color:var(--messing)}
+.tdx__partner{border-color:var(--line);background:var(--white)} .tdx__partner p:not(.xlabel){color:var(--anthrazit)}
+.tk{border-top:1px solid var(--line)}
