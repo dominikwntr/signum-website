@@ -1265,3 +1265,5 @@ p{text-wrap:pretty}
 .tc__info h3,.tc__info h4{color:var(--ink)} .tc__info p{color:var(--muted)} .tc__info a{color:var(--messing)}
 .tdx__partner{border-color:var(--line);background:var(--white)} .tdx__partner p:not(.xlabel){color:var(--anthrazit)}
 .tk{border-top:1px solid var(--line)}
+:root{--stage-portrait:radial-gradient(90% 60% at 50% 0%,rgba(255,214,150,.55) 0%,rgba(255,214,150,0) 70%),linear-gradient(180deg,#EDA840 0%,#D4A46A 30%,#A9998A 62%,#8F857B 100%)}
+.tg__stage,.tc__stage{background:var(--stage-portrait)}
