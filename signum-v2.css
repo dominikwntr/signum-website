@@ -805,6 +805,9 @@ p{text-wrap:pretty}
 .fx__send{flex:1;max-width:22rem;justify-content:center}
 .fx__legal{margin:1.5rem 0 0;padding-top:1rem;border-top:1px solid var(--line-dark);font-size:.72rem;color:rgba(247,244,237,.4)}
 @media (prefers-reduced-motion:reduce){.fx__step.fx-in,.fx__step.fx-back{animation:none}}
+/* Ansprechpartner Porträt: Ausschnitt auf Kopf und Schultern */
+.xx__av{position:relative;width:72px;height:72px;border-radius:50%;overflow:hidden;flex:none;background:var(--stage-portrait,#C9A06A)}
+.xx__person .xx__av img{position:absolute;width:160%;height:auto;max-width:none;left:-35.7%;top:-2.4%;border-radius:0;background:none;object-fit:initial}
 
 
 /* =====================================================================
