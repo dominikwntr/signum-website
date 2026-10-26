@@ -1130,9 +1130,8 @@ p{text-wrap:pretty}
 .tdx__partner .xlabel{margin-bottom:.75rem}
 .tdx__partner p:not(.xlabel){color:rgba(247,244,237,.72);line-height:1.7;max-width:80ch}
 .ts__lineup{height:auto;padding:0;overflow:visible;margin-left:calc(-1 * var(--gut));margin-right:calc(-1 * var(--gut))}
-.ts__lineup img{height:auto;width:calc(9vw + (4 - var(--d,4)) * .9vw);margin:0 -1.55vw;max-width:none}
-@media(max-width:699px){.ts__lineup img{width:calc(17vw + (4 - var(--d,4)) * 1.6vw);margin:0 -3.2vw}}
-@media(max-width:699px){.ts{min-height:0}.ts__lineup{margin-top:2.5rem}.ts__lineup img{width:calc(20vw + (4 - var(--d,4)) * 2vw);margin:0 -4vw}}
+.ts__lineup img{height:auto;width:calc(7.6vw + (4 - var(--d,4)) * .8vw);margin:0 -1.3vw;max-width:none}
+@media(max-width:699px){.ts{min-height:0}.ts__lineup{margin-top:2.5rem}.ts__lineup img{width:calc(13vw + (4 - var(--d,4)) * 1.8vw);margin:0 -2.4vw}.ts__lineup img:nth-child(n+11){display:none}}
 
 /* ---------- Kundenstimmen v4 ---------------------------------------- */
 .kh{background:var(--stage);color:var(--elfenbein);padding:calc(76px + clamp(2rem,5vw,3.5rem)) var(--gut) clamp(3rem,6vw,5rem)}
