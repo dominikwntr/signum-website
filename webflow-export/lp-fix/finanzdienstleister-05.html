@@ -1,0 +1,61 @@
+<!-- FD: BEWERBUNG -->
+<section class="fd fd-sec" id="bewerbung">
+<style>
+.fd-form-wrap{margin-top:2.25rem;background:#fff;border:1px solid rgba(14,14,14,.09);border-radius:20px;padding:clamp(1.6rem,4vw,2.75rem);max-width:820px;box-shadow:0 20px 60px rgba(14,14,14,.06);}
+.fd-form{display:flex;flex-direction:column;gap:1.05rem;}
+.fd-frow{display:grid;grid-template-columns:1fr 1fr;gap:1.05rem;}
+.fd-field{display:flex;flex-direction:column;gap:.4rem;}
+.fd-field label{font-size:.82rem;font-weight:600;color:var(--ink);}
+.fd-field input,.fd-field select,.fd-field textarea{background:#fff;color:var(--ink);border:1px solid rgba(14,14,14,.18);border-radius:8px;padding:.72rem .85rem;font:inherit;font-size:.97rem;outline:none;transition:border-color .2s;}
+.fd-field input:focus,.fd-field select:focus,.fd-field textarea:focus{border-color:var(--gold);}
+.fd-field textarea{min-height:88px;resize:vertical;}
+.fd-consent{font-size:.78rem;color:var(--muted);line-height:1.6;}
+.fd-consent a{color:var(--gold-d);}
+.fd-danke{display:none;text-align:center;padding:2.5rem 1.5rem;}
+.fd-danke__ic{width:56px;height:56px;margin:0 auto 1rem;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;}
+.fd-danke__ic svg{width:28px;height:28px;stroke:#fff;stroke-width:2.5;}
+@media(max-width:600px){.fd-frow{grid-template-columns:1fr;}}
+</style>
+  <div class="fd-wrap fd-reveal">
+    <span class="fd-eyebrow">Kennenlernen</span>
+    <h2 style="margin-top:1rem;">Lernen wir uns <em>kennen</em>.</h2>
+    <p class="lead">F&#252;llen Sie das Formular aus - wir melden uns in der Regel innerhalb eines Werktags telefonisch bei Ihnen.</p>
+    <div class="fd-form-wrap">
+      <form id="fdForm" class="fd-form">
+        <div class="fd-frow"><div class="fd-field"><label>Vorname</label><input type="text" name="vorname" required></div><div class="fd-field"><label>Nachname</label><input type="text" name="nachname" required></div></div>
+        <div class="fd-frow"><div class="fd-field"><label>E-Mail</label><input type="email" name="email" required></div><div class="fd-field"><label>Telefon</label><input type="tel" name="telefon" required></div></div>
+        <div class="fd-frow"><div class="fd-field"><label>Region / PLZ</label><input type="text" name="region" placeholder="z. B. Hannover / 30159" required></div><div class="fd-field"><label>Aktuelle T&#228;tigkeit</label><select name="taetigkeit"><option value="">Bitte w&#228;hlen</option><option>Finanzberater/-in</option><option>Versicherungsvermittler/-in</option><option>Immobilienmakler/-in</option><option>Bankberater/-in</option><option>Verm&#246;gensberater/-in</option><option>Sonstiges</option></select></div></div>
+        <div class="fd-frow"><div class="fd-field"><label>Jahre Erfahrung</label><select name="erfahrung"><option value="">Bitte w&#228;hlen</option><option>Unter 2 Jahre</option><option>2-5 Jahre</option><option>5-10 Jahre</option><option>&#220;ber 10 Jahre</option></select></div><div class="fd-field"><label>Gr&#246;&#223;e aktiver Kundenstamm</label><select name="kundenstamm"><option value="">Bitte w&#228;hlen</option><option>Unter 50</option><option>50-150</option><option>150-300</option><option>300-500</option><option>&#220;ber 500</option></select></div></div>
+        <div class="fd-frow"><div class="fd-field"><label>Erlaubnis / Zulassung</label><select name="erlaubnis"><option value="">Bitte w&#228;hlen</option><option>&#167;34f (Finanzanlagen)</option><option>&#167;34i (Immobiliardarlehen)</option><option>&#167;34c (Immobilien)</option><option>&#167;34d (Versicherungen)</option><option>Mehrere</option><option>Keine / in Kl&#228;rung</option></select></div><div class="fd-field"><label>Verf&#252;gbarkeit</label><select name="umfang"><option value="">Bitte w&#228;hlen</option><option>Vollzeit</option><option>Nebenberuflich</option><option>Noch offen</option></select></div></div>
+        <div class="fd-field"><label>Nachricht (optional)</label><textarea name="nachricht" placeholder="Was m&#246;chten Sie uns vorab mitteilen?"></textarea></div>
+        <p class="fd-consent">Mit dem Absenden stimmen Sie der Verarbeitung Ihrer Daten gem&#228;&#223; unserer <a href="/datenschutz" target="_blank">Datenschutzerkl&#228;rung</a> zu. Ihre Angaben werden vertraulich behandelt.</p>
+        <button type="submit" class="fd-btn fd-btn--gold" style="justify-content:center;">Kennenlernen anfragen &#8594;</button>
+      </form>
+      <div class="fd-danke" id="fdDanke"><div class="fd-danke__ic"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div><div style="font-weight:700;font-size:1.25rem;margin-bottom:.5rem;color:var(--ink);">Vielen Dank f&#252;r Ihre Anfrage!</div><p style="color:var(--muted);">Wir haben Ihre Angaben erhalten und melden uns in der Regel innerhalb eines Werktags telefonisch bei Ihnen.</p></div>
+    </div>
+  </div>
+  <script>
+  (function(){
+    var WEBHOOK='https://hooks.zapier.com/hooks/catch/24642695/4u5b6d5/';
+    var f=document.getElementById('fdForm'); if(!f||f.dataset.b)return; f.dataset.b='1';
+    f.addEventListener('submit',function(e){
+      e.preventDefault();
+      if(!f.checkValidity()){f.reportValidity();return;}
+      var btn=f.querySelector('button[type=submit]'); if(btn){btn.disabled=true;btn.textContent='Wird gesendet ...';}
+      var data=new URLSearchParams(new FormData(f));
+      data.append('quelle','Partner-Landingpage Finanzdienstleister');
+      function done(){f.style.display='none';document.getElementById('fdDanke').style.display='block';document.getElementById('bewerbung').scrollIntoView({behavior:'smooth'});}
+      if(WEBHOOK.indexOf('http')===0){fetch(WEBHOOK,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:data.toString()}).then(done).catch(done);}else{done();}
+    });
+  })();
+  </script>
+</section>
+
+<footer class="footer">
+<div class="footer__inner"><div><div class="footer__brand-logo"><img src="https://cdn.prod.website-files.com/68d59829429a32ae5a0a10c5/6a26c331fe7a17fb79dc994e_signum-logo-footer-weisseschrift.svg" alt="Signum Real Estate" style="height:30px;width:auto;display:block;" /></div><p class="footer__brand-text">Wohnimmobilieninvestor, Projektentwickler und Bautr&#228;ger. Substanz aus einer Hand - f&#252;r Kapitalanleger, die Wert verstehen.</p>
+<div class="footer__social" style="display:flex;gap:.6rem;margin-top:1.4rem;"><a href="https://www.linkedin.com/company/signumrealestate" target="_blank" rel="noopener" aria-label="LinkedIn" style="width:38px;height:38px;border:1px solid rgba(247,244,237,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;transition:all .2s;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#F2AC3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a><a href="https://www.instagram.com/signum.realestate/" target="_blank" rel="noopener" aria-label="Instagram" style="width:38px;height:38px;border:1px solid rgba(247,244,237,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;transition:all .2s;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#F2AC3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a></div></div>
+<div><div class="footer__col-title">Unternehmen</div><ul class="footer__links"><li><a href="/investieren">Investieren</a></li><li><a href="/referenzobjekte">Referenzen</a></li><li><a href="/ankaufsprofil">Ankaufsprofil</a></li><li><a href="/kundenstimmen">Kundenstimmen</a></li><li><a href="/team">Team</a></li><li><a href="/karriere">Karriere</a></li></ul></div>
+<div><div class="footer__col-title">Leistungen</div><ul class="footer__links"><li><a href="/#leistungen">Bestandsimmobilien</a></li><li><a href="/#leistungen">Neubauprojekte</a></li><li><a href="/#leistungen">Wohnungsprivatisierung</a></li></ul></div>
+<div><div class="footer__col-title">Rechtliches</div><ul class="footer__links"><li><a href="/impressum">Impressum</a></li><li><a href="/datenschutz">Datenschutz</a></li><li><a href="/digitale-barrierefreiheit">Barrierefreiheit</a></li></ul><div style="margin-top:1.75rem;"><div class="footer__col-title">Kontakt</div><ul class="footer__links"><li><a href="tel:+4953131057760">+49 531 31057760</a></li><li><a href="mailto:info@signum-realestate.com">info@signum-realestate.com</a></li></ul></div></div></div>
+<div class="footer__bottom"><p class="footer__copy">&#169; 2026 Signum Real Estate GmbH &#183; Am Alten Bahnhof 13 &#183; 38122 Braunschweig</p><ul class="footer__legal"><li><a href="/impressum">Impressum</a></li><li><a href="/datenschutz">Datenschutz</a></li><li><a href="/digitale-barrierefreiheit">Barrierefreiheit</a></li></ul></div>
+</footer>
