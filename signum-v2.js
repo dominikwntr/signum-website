@@ -256,7 +256,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
     /* Rechnerwerte ins Kontaktformular übernehmen */
     try {
       var q = new URLSearchParams(location.search).get('berechnung');
-      var ta = document.querySelector('#kontaktForm textarea[name="nachricht"]');
+      var ta = document.querySelector('#kontaktForm:not([data-funnel]) textarea[name="nachricht"]');
       if (q && ta) {
         ta.value = 'Meine Berechnung: ' + q + '\n\nBitte prüfen Sie diese Rechnung mit mir.';
         var sel = document.querySelector('#kontaktForm select[name="interesse"]'); if (sel) sel.value = 'Kapitalanlage Immobilie';
@@ -340,6 +340,68 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
       calc();
     });
   });
+})();
+
+/* Anfrage-Fragebogen: eine Frage pro Schritt */
+(function () {
+  var f = document.querySelector('form[data-funnel]');
+  if (!f) return;
+  var steps = [].slice.call(f.querySelectorAll('.fx__step'));
+  var byId = {}; steps.forEach(function (s) { byId[s.getAttribute('data-step')] = s; });
+  var bar = f.querySelector('.fx__prog i'), hist = [], cur = steps[0];
+  var LABELS = { interesse: 'Anliegen', ziel: 'Ziel', objekt: 'Objektart', wohnsitz: 'Aufenthaltsstatus', beruf: 'Beruf', probezeit: 'Probezeit bestanden', selbstaendig_2_jahre: 'Mindestens 2 Jahre selbständig', einkommen: 'Nettoeinkommen', eigenkapital: 'Eigenkapital', gemeinsam: 'Allein oder gemeinsam', zeithorizont: 'Zeitpunkt', aufmerksam: 'Aufmerksam geworden über', verkauf_objekt: 'Verkauf: Objektart', verkauf_ort: 'Verkauf: Lage', verkauf_umfang: 'Verkauf: Umfang', anfrage: 'Anfrage', erreichbarkeit: 'Beste Erreichbarkeit', berechnung: 'Berechnung aus dem Rechner', nachricht_kunde: 'Nachricht' };
+  function path() { var ids = hist.map(function (s) { return s; }).concat([cur]); return ids; }
+  function summary() {
+    var seen = {}, lines = [];
+    path().forEach(function (s) { [].slice.call(s.querySelectorAll('input,textarea,select')).forEach(function (el) {
+      var n = el.name; if (!n || !LABELS[n] || seen[n]) return;
+      if ((el.type === 'radio' || el.type === 'checkbox') && !el.checked) return;
+      var v = (el.value || '').trim(); if (!v) return; seen[n] = 1; lines.push(LABELS[n] + ': ' + v);
+    }); });
+    var bz = f.querySelector('[name="berechnung"]'); if (bz && bz.value && !seen.berechnung) lines.push(LABELS.berechnung + ': ' + bz.value);
+    f.querySelector('[name="nachricht"]').value = lines.join('\n');
+  }
+  function show(s, back) {
+    cur.hidden = true; s.hidden = false; cur = s;
+    if (bar) bar.style.transform = 'scaleX(' + (parseInt(s.getAttribute('data-p'), 10) || 0) / 100 + ')';
+    s.classList.remove('fx-in', 'fx-back'); void s.offsetWidth; s.classList.add(back ? 'fx-back' : 'fx-in');
+    var r = f.getBoundingClientRect(); if (r.top < 80) window.scrollTo({ top: window.scrollY + r.top - 100, behavior: 'smooth' });
+    var first = s.querySelector('input:not([type=radio]):not([type=hidden]),textarea'); if (first && !back) setTimeout(function () { try { first.focus({ preventScroll: true }); } catch (e) {} }, 350);
+    steps.forEach(function (st) { st.disabled = !(st === cur || hist.indexOf(st) > -1); });
+    summary();
+  }
+  function go(id) { var s = byId[id]; if (!s) return; hist.push(cur); show(s); }
+  function valid(s) {
+    var ok = true;
+    [].slice.call(s.querySelectorAll('[data-req]')).forEach(function (el) { var bad = !el.value.trim(); el.classList.toggle('is-bad', bad); if (bad && ok) { ok = false; el.focus(); } });
+    return ok;
+  }
+  function nextOf(s) {
+    var chk = s.querySelector('input[type=radio]:checked'); if (chk) return chk.getAttribute('data-next');
+    if (s.getAttribute('data-default')) return s.getAttribute('data-default');
+    var id = s.getAttribute('data-step'); return { vk_ort: 'kontakt', sonst: 'kontakt' }[id];
+  }
+  f.addEventListener('change', function (e) {
+    var el = e.target; summary();
+  });
+  f.addEventListener('input', summary);
+  f.addEventListener('click', function (e) {
+    var ri = e.target.matches && e.target.matches('.fx__opt input[type=radio]') ? e.target : null;
+    if (ri) { var st = ri.closest('.fx__step'); setTimeout(function () { if (cur === st && ri.checked) go(ri.getAttribute('data-next')); }, 260); return; }
+    var b = e.target.closest('[data-back]'); if (b) { e.preventDefault(); if (hist.length) show(hist.pop(), true); return; }
+    var n = e.target.closest('[data-next-btn]'); if (n) { e.preventDefault(); if (valid(cur)) go(nextOf(cur)); }
+  });
+  f.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' || e.target.tagName === 'TEXTAREA') return;
+    if (cur.getAttribute('data-step') !== 'kontakt') { e.preventDefault(); var n = cur.querySelector('[data-next-btn]'); if (n) n.click(); }
+  });
+  /* Werte aus dem Renditerechner übernehmen */
+  try {
+    var q = new URLSearchParams(location.search).get('berechnung');
+    if (q) { f.querySelector('[name="berechnung"]').value = q; var r = f.querySelector('input[name="interesse"][value="Kapitalanlage Immobilie"]'); if (r) { r.checked = true; hist.push(cur); show(byId.ziel); } }
+  } catch (e) {}
+  steps.forEach(function (st) { st.disabled = st !== cur && hist.indexOf(st) < 0; });
+  summary();
 })();
 
 
