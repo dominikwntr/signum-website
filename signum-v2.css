@@ -808,6 +808,8 @@ p{text-wrap:pretty}
 /* Ansprechpartner Porträt: Ausschnitt auf Kopf und Schultern */
 .xx__av{position:relative;width:72px;height:72px;border-radius:50%;overflow:hidden;flex:none;background:var(--stage-portrait,#C9A06A)}
 .xx__person .xx__av img{position:absolute;width:160%;height:auto;max-width:none;left:-35.7%;top:-2.4%;border-radius:0;background:none;object-fit:initial}
+.xx__av{width:64px;height:64px}
+.xx__person .xx__av img{width:128%;left:-18.7%;top:4%}
 
 
 /* =====================================================================
