@@ -712,6 +712,26 @@ p{text-wrap:pretty}
 .xh__rating{padding:.6rem 0;min-height:44px}
 .xx__person a{padding:.35rem 0;display:inline-block}
 
+/* ---------- Hero hell überblendet (wie bisherige Seite) ------------- */
+.xh{background:var(--elfenbein);color:var(--ink)}
+.xh::after{background:linear-gradient(90deg,rgba(247,244,237,.97) 0%,rgba(247,244,237,.88) 38%,rgba(247,244,237,.5) 70%,rgba(247,244,237,.18) 100%),linear-gradient(0deg,rgba(247,244,237,.75) 0%,rgba(247,244,237,0) 45%)}
+@media(max-width:899px){.xh::after{background:linear-gradient(180deg,rgba(247,244,237,.93) 0%,rgba(247,244,237,.85) 55%,rgba(247,244,237,.7) 100%)}}
+.xh__kicker{color:var(--muted);border-bottom-color:rgba(20,20,20,.15)}
+.xh__kicker span:first-child{color:var(--messing)}
+.xh__title{color:var(--ink)}
+.xh__sub{color:var(--anthrazit)}
+.xh__link{color:var(--ink);border-bottom-color:rgba(20,20,20,.35)}
+.xh__link:hover{border-color:var(--ink)}
+.xh__rating{color:var(--muted)}
+.xh__rating b{color:var(--ink)}
+.xh__rating:hover{color:var(--ink)}
+.xh__kpis{border-top-color:rgba(20,20,20,.15)}
+.xh__kpis>div:nth-child(2n),.xh__kpis>div+div{border-left-color:rgba(20,20,20,.15) !important}
+.xh__kpis dt{color:var(--ink)}
+.xh__kpis dd{color:var(--muted)}
+.xh::after{background:linear-gradient(90deg,rgba(247,244,237,.97) 0%,rgba(247,244,237,.88) 40%,rgba(247,244,237,.66) 70%,rgba(247,244,237,.5) 100%),linear-gradient(0deg,rgba(247,244,237,.78) 0%,rgba(247,244,237,0) 45%),linear-gradient(180deg,rgba(247,244,237,.6) 0%,rgba(247,244,237,0) 22%)}
+@media(max-width:899px){.xh::after{background:linear-gradient(180deg,rgba(247,244,237,.93) 0%,rgba(247,244,237,.85) 55%,rgba(247,244,237,.72) 100%)}}
+
 
 /* =====================================================================
    RECHNER v3
