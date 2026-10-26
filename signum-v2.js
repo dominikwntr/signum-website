@@ -221,7 +221,9 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
     /* Kundenstimmen */
     $$('[data-slider]').forEach(function (s) {
       var slides = $$('.xq__slide', s), i = 0, cnt = $('[data-slider-count]', s), timer;
-      function go(n) { i = (n + slides.length) % slides.length; slides.forEach(function (x, k) { x.classList.toggle('on', k === i); }); if (cnt) cnt.textContent = String(i + 1).padStart(2, '0'); }
+      var bars = $$('.kq__bars i', s);
+      function go(n) { i = (n + slides.length) % slides.length; slides.forEach(function (x, k) { x.classList.toggle('on', k === i); }); if (cnt) cnt.textContent = String(i + 1).padStart(2, '0');
+        bars.forEach(function (b, k) { b.classList.remove('on'); b.classList.toggle('done', k < i); void b.offsetWidth; if (k === i) b.classList.add('on'); }); }
       function auto() { clearInterval(timer); if (!reduce) timer = setInterval(function () { go(i + 1); }, 9000); }
       var p = $('[data-slider-prev]', s), n = $('[data-slider-next]', s);
       if (p) p.addEventListener('click', function () { go(i - 1); auto(); });
@@ -260,6 +262,19 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
         var sel = document.querySelector('#kontaktForm select[name="interesse"]'); if (sel) sel.value = 'Kapitalanlage Immobilie';
       }
     } catch (e) {}
+
+
+    /* Track Record Punkte und Bauzeitenplan */
+    $$('[data-dots]').forEach(function (sec) {
+      var dots = $$('.tr__dots i', sec), done = false;
+      function fill() { if (done) return; done = true; dots.forEach(function (d, k) { setTimeout(function () { d.classList.add('on'); }, reduce ? 0 : k * 9); }); }
+      if (!('IntersectionObserver' in window)) return fill();
+      new IntersectionObserver(function (es, o) { es.forEach(function (e) { if (e.isIntersecting) { fill(); o.disconnect(); } }); }, { threshold: .35 }).observe(sec);
+    });
+    $$('.gw').forEach(function (sec) {
+      if (!('IntersectionObserver' in window)) return sec.classList.add('in');
+      new IntersectionObserver(function (es, o) { es.forEach(function (e) { if (e.isIntersecting) { sec.classList.add('in'); o.disconnect(); } }); }, { threshold: .2 }).observe(sec.querySelector('.gw__plan'));
+    });
 
     /* Referenzen filtern */
     $$('[data-filter-root]').forEach(function (root) {
