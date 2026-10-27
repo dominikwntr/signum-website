@@ -1833,6 +1833,14 @@ html{scroll-behavior:smooth}
 .ob__media>img:first-child{object-position:50% 30%}
 
 .tg__mtxt{margin:.9rem 0 0;color:var(--anthrazit);font-size:clamp(.95rem,1.2vw,1.05rem);line-height:1.75;max-width:52ch}
+/* Checkliste im Ratgeber */
+.rgc[data-rgc="checkliste-kauf"] .rgc__ins{gap:.7rem}
+.rgc[data-rgc="checkliste-kauf"] .rgc__chk{align-items:flex-start;line-height:1.45}
+.rgc[data-rgc="checkliste-kauf"] .rgc__chk input{flex:none;margin-top:.15rem}
+.rgc[data-rgc="neubau-oder-bestand"] .rgc__in select{font-size:.95rem;white-space:normal}
+.rgc__f>span:first-child{white-space:normal;overflow-wrap:break-word}
+.rgc__in select{width:100%;max-width:100%;text-overflow:ellipsis}
+.rgc__grid,.rgc__ins,.rgc__outs{min-width:0}
 
 
 /* =====================================================================
@@ -2074,3 +2082,27 @@ html:has(.sah),html:has(.sah) body{overflow-x:clip!important;overflow-y:visible!
 
 @media(max-width:899px){.rgs__grid{grid-template-columns:1fr}.rgs__grid .sa-tile,.rgs__grid .sa-tile:first-child{grid-column:auto;aspect-ratio:16/10}}
 @media(max-width:599px){.sax__grid .sa-tile__f{display:none}.sax__grid .sa-tile b{font-size:clamp(.9rem,4.7vw,1.35rem)}}
+/* Neubau gegen Bestand */
+.sar__tabs{display:inline-flex;gap:.25rem;padding:.25rem;border:1px solid var(--line);border-radius:999px;margin:0 0 1.25rem}
+.sar__tabs button{border:0;background:transparent;padding:.55rem 1.1rem;border-radius:999px;font:inherit;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;transition:background .25s var(--ease),color .25s}
+.sar__tabs button[aria-selected="true"]{background:var(--ink);color:var(--elfenbein)}
+.sar__legend{display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;margin:0 0 1rem;font-size:.82rem;color:var(--anthrazit)}
+.sar__lg{display:inline-flex;align-items:center;gap:.5rem}
+.sar__lg::before{content:"";width:.8rem;height:.8rem;border-radius:2px;background:linear-gradient(180deg,var(--gold),var(--messing))}
+.sar__lg--b::before{background:#B9B2A5}
+.sar__lg b{font-family:var(--font-head);color:var(--ink)}
+.sar__chart--2 li{justify-content:flex-end}
+.sar__pair{display:flex;align-items:flex-end;gap:2px;width:100%;height:100%}
+.sar__bar{position:relative;flex:1;height:calc(var(--h) * 100%);border-radius:2px 2px 0 0;background:linear-gradient(180deg,var(--gold),var(--messing));transform:scaleY(0);transform-origin:bottom;transition:transform 1.1s var(--ease);transition-delay:calc(var(--i) * 70ms)}
+.sar__bar--b{background:linear-gradient(180deg,#CFC8BB,#A79F90)}
+.sar__bar--na{background:none}
+.sar__bar b{position:absolute;left:50%;bottom:100%;transform:translate(-50%,-.35rem);font-family:var(--font-head);font-size:clamp(.62rem,1vw,.8rem);font-weight:600;color:var(--ink);white-space:nowrap;opacity:0;transition:opacity .6s var(--ease);transition-delay:calc(.7s + var(--i) * 70ms)}
+.sar__bar:not(.sar__bar--lab) b{display:none}
+.sar__bar--b b{bottom:auto;top:-1.3rem;color:var(--muted)}
+.sar__bar--n.sar__bar--lab b{top:auto}
+.sar__chart--2.in .sar__bar{transform:scaleY(1)} .sar__chart--2.in .sar__bar b{opacity:1}
+.sar__chart--2 li:hover .sar__bar b{display:block;opacity:1}
+@media (prefers-reduced-motion:reduce){.sar__bar{transform:none;transition:none}.sar__bar b{opacity:1}}
+.sar__bar--na{display:none}
+.sar__lg:empty{display:none}
+.sar__bar--b b{background:var(--white);padding:0 .2em;border-radius:2px;left:60%}

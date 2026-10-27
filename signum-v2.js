@@ -616,12 +616,38 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
       var p = g('price'), bl = root.querySelector('[data-k="bl"]').value, mk = root.querySelector('[data-k="makler"]').checked;
       var gr = p * GR[bl] / 100, no = p * 0.02, ma = mk ? p * 0.0357 : 0;
       return { sum: eur(gr + no + ma), grest: eur(gr) + ' (' + pct(GR[bl]) + ')', notar: eur(no), makler: eur(ma) };
+    },
+    'rendite-cashflow': function (g) {
+      var p = g('price'), rent = g('rent'), cost = g('cost'), loan = p * g('ltv') / 100;
+      var rate = loan * (g('zins') + g('tilg')) / 1200, tm = loan * g('tilg') / 1200, cf = rent - cost - rate;
+      var br = p > 0 ? rent * 1200 / p : 0, nt = p > 0 ? (rent - cost) * 1200 / (p * (1 + g('nk') / 100)) : 0;
+      return { cf: (cf >= 0 ? '+ ' : '\u2212 ') + eur(Math.abs(cf)), brutto: pct(br), faktor: rent > 0 ? (p / (rent * 12)).toLocaleString('de-DE', { maximumFractionDigits: 1 }) : '\u2013', netto: pct(nt), rate: eur(rate), tilgm: eur(tm), _warn: cf < 0 ? 'cf' : '' };
+    },
+    'mietbegriffe': function (g, root) {
+      var vgl = g('vgl'), ist = g('ist'), vor = g('vor'), k = parseFloat(root.querySelector('[data-k="kapp"]').value) || 20;
+      var br = root.querySelector('[data-k="bremse"]').checked, nb = root.querySelector('[data-k="neubau"]').checked;
+      var qm = function (v) { return v.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' \u20ac/m\u00b2'; };
+      var kg = vor * (1 + k / 100), erh = Math.max(ist, Math.min(vgl, kg)), plus = erh - ist;
+      var neu = nb ? 'frei, Grenze \u00a7 5 WiStG' : (br ? qm(Math.max(vgl * 1.1, ist)) : 'frei vereinbar');
+      return { erh: qm(erh), plus: qm(plus) + (ist > 0 ? ' (' + pct(plus / ist * 100) + ')' : ''), kg: qm(kg), neu: neu };
+    },
+    'neubau-oder-bestand': function (g, root) {
+      var pn = 0, pb = 0;
+      [].slice.call(root.querySelectorAll('select')).forEach(function (s) { var v = parseFloat(s.value) || 0; if (v > 0) pn += v; else pb -= v; });
+      var d = pn - pb;
+      return { tend: d >= 2 ? 'Eher Neubau' : (d <= -2 ? 'Eher Bestand' : 'Beides denkbar'), pn: String(pn), pb: String(pb) };
+    },
+    'checkliste-kauf': function (g, root) {
+      var cs = [].slice.call(root.querySelectorAll('input[type=checkbox]')), n = cs.filter(function (c) { return c.checked; }).length;
+      try { localStorage.setItem('sg_chk', JSON.stringify(cs.map(function (c) { return c.checked ? 1 : 0; }))); } catch (e) {}
+      return { done: n + ' von ' + cs.length, rest: n === cs.length ? 'Alles gepr\u00fcft' : (cs.length - n) + ' Punkte' };
     }
   };
   [].slice.call(document.querySelectorAll('[data-rgc]')).forEach(function (root) {
     var fn = F[root.getAttribute('data-rgc')]; if (!fn) return;
     function g(k) { var el = root.querySelector('[data-k="' + k + '"]'); return el ? num(el.value) : 0; }
     function run() { var r = fn(g, root); Object.keys(r).forEach(function (k) { var o = root.querySelector('[data-o="' + k + '"]'); if (o) o.textContent = r[k]; }); [].slice.call(root.querySelectorAll('[data-o]')).forEach(function (o) { o.classList.toggle('rgc__warn', r._warn === o.getAttribute('data-o')); }); }
+    if (root.getAttribute('data-rgc') === 'checkliste-kauf') { try { var st = JSON.parse(localStorage.getItem('sg_chk') || '[]'); [].slice.call(root.querySelectorAll('input[type=checkbox]')).forEach(function (c, i) { c.checked = !!st[i]; }); } catch (e) {} }
     root.addEventListener('input', run); root.addEventListener('change', run);
     [].slice.call(root.querySelectorAll('input[type=text]')).forEach(function (el) { el.addEventListener('blur', function () { var v = num(el.value); el.value = v >= 1000 ? de.format(v) : String(v).replace('.', ','); run(); }); el.addEventListener('focus', function () { el.select(); }); });
     run();
@@ -673,6 +699,22 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
   }
   window.addEventListener('scroll', function () { if (!tick) { tick = true; requestAnimationFrame(upd); } }, { passive: true });
   window.addEventListener('resize', upd); upd();
+})();
+
+/* Standortanalysen: Umschalter Mieten und Kaufpreise */
+(function () {
+  [].slice.call(document.querySelectorAll('[data-sarviz]')).forEach(function (v) {
+    var bs = [].slice.call(v.querySelectorAll('[data-tab]'));
+    bs.forEach(function (b) {
+      b.addEventListener('click', function () {
+        bs.forEach(function (x) { x.setAttribute('aria-selected', x === b ? 'true' : 'false'); });
+        [].slice.call(v.querySelectorAll('[data-panel]')).forEach(function (p) {
+          var on = p.getAttribute('data-panel') === b.getAttribute('data-tab'); p.hidden = !on;
+          var c = p.querySelector('.sar__chart'); if (on && c) { c.classList.remove('in'); void c.offsetWidth; requestAnimationFrame(function () { c.classList.add('in'); }); }
+        });
+      });
+    });
+  });
 })();
 
 
