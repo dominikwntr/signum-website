@@ -467,9 +467,21 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
     if (!f.checkValidity()) return;
     var id = (f.querySelector('[name="event_id"]') || {}).value;
     var it = f.querySelector('[name="interesse"]:checked') || f.querySelector('[name="interesse"]');
-    if (window.fbq && pixelOn) window.fbq('track', 'Lead', { content_name: it ? it.value : 'Anfrage' }, { eventID: id });
+    var iv = it ? it.value : '', ank = f.id === 'ankaufForm' || iv === 'Ankauf', obj = (f.querySelector('[name="objekt_anfrage"]') || {}).value;
+    if (window.fbq && pixelOn) {
+      /* Nur Investoren Anfragen zaehlen als Lead, alles andere als eigenes Ereignis */
+      if (ank) window.fbq('trackCustom', 'Verkaufsangebot', {}, { eventID: id });
+      else if (iv === 'Kapitalanlage Immobilie' || obj) window.fbq('track', 'Lead', { content_name: obj ? 'Exposé ' + obj : 'Kapitalanlage' }, { eventID: id });
+      else window.fbq('track', 'Contact', { content_name: iv || 'Anfrage' }, { eventID: id });
+    }
     if (window._hsq) window._hsq.push(['trackCustomBehavioralEvent', { name: 'website_anfrage' }]);
   }, true);
+
+  /* Termin ueber den HubSpot Kalender gebucht */
+  window.addEventListener('message', function (e) {
+    if (!/^https:\/\/[a-z0-9.-]*hubspot\.com$/.test(e.origin || '')) return;
+    if (e.data && e.data.meetingBookSucceeded && window.fbq && pixelOn) window.fbq('track', 'Schedule');
+  });
 
   /* Termin direkt buchen nach dem Fragebogen */
   var danke = document.getElementById('kontaktDanke'), box = document.getElementById('fxTermin');
@@ -720,6 +732,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
 /* HubSpot: Anfragen direkt an die HubSpot Formulare senden (Close Zap laeuft parallel bis zum Wechsel) */
 (function () {
   var PORTAL = (window.SG_CFG || {}).hubspot || '146550668';
+  var VK = 'https://hooks.zapier.com/hooks/catch/24642695/49ukprd/'; /* Zap Website Verkaufsangebote an Tim Segler */
   var G = { anfrage: '4bca05f7-c127-4475-bfdf-0b426091a640', ankauf: '06e9df47-47f3-473f-a575-276211370f70', rechner: 'c578f369-4aa6-41b5-9687-65e94e8f6112' };
   var ZEIT = { 'In den nächsten 3 Monaten': 'sofort_0_3_monate', 'In 3 bis 6 Monaten': '3_6_monate', 'In 6 bis 12 Monaten': '6_12_monate', 'Später als in 12 Monaten': 'spaeter_12_monate', 'Ich möchte mich erst informieren': 'noch_offen' };
   var ZIEL = { 'Vermögensaufbau und Altersvorsorge': 'Vermögensaufbau', 'Steuerliche Vorteile nutzen': 'Steuervorteil', 'Passives Einkommen aufbauen': 'Cashflow' };
@@ -748,9 +761,15 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
     if (!g('email')) return; f.dataset.hs = '1';
     var v = { firstname: g('vorname'), lastname: g('nachname'), email: g('email'), phone: g('telefon'), message: g('nachricht'), erreichbarkeit: g('erreichbarkeit'), meta_event_id: g('event_id') };
     if (ank) {
-      v.website_anfrage_art = 'objekt_verkaufen'; v.quelle_details = 'Ankaufsprofil'; v.company = g('firma'); v.ankauf_rolle = g('anbieter_rolle'); v.ankauf_objektart = g('verkauf_objekt');
-      v.ankauf_lage = g('verkauf_ort'); v.ankauf_umfang = g('verkauf_umfang'); v.ankauf_baujahr = g('baujahr'); v.ankauf_preisvorstellung = g('preisvorstellung'); v.ankauf_expose_link = g('expose_link');
-      sgHubSpot('ankauf', v); return;
+      /* Verkaufsangebote nicht in HubSpot, sondern per Mail direkt an Tim Segler */
+      var a = attr(), vk = { formular: f.id === 'ankaufForm' ? 'Ankaufsprofil' : 'Kontaktformular', vorname: g('vorname'), nachname: g('nachname'), email: g('email'), telefon: g('telefon'),
+        firma: g('firma'), rolle: g('anbieter_rolle'), objektart: g('verkauf_objekt'), lage: g('verkauf_ort'), umfang: g('verkauf_umfang'), baujahr: g('baujahr'),
+        preisvorstellung: g('preisvorstellung'), expose_link: g('expose_link'), erreichbarkeit: g('erreichbarkeit'), nachricht: g('nachricht'),
+        seite: location.href.split('#')[0], einstiegsseite: a.einstieg, referrer: a.referrer, utm_source: a.utm_source, utm_medium: a.utm_medium, utm_campaign: a.utm_campaign,
+        eingang: new Date().toLocaleString('de-DE') };
+      var body = new URLSearchParams(); Object.keys(vk).forEach(function (k) { body.append(k, vk[k] || '-'); });
+      fetch(VK, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body.toString() }).catch(function () {});
+      return;
     }
     v.website_anfrage_art = g('objekt_anfrage') ? 'expose_anfrage' : (ART[it] || 'sonstige_anfrage');
     v.was_ist_ihr_ziel_mit_immobilien = g('ziel'); v.motivationziel = ZIEL[g('ziel')]; v.welche_assetklasse_wird_gesucht = g('objekt'); v.aufenthaltsstatus_deutschland = g('wohnsitz');
@@ -932,7 +951,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
         try { var at = JSON.parse(localStorage.getItem('sg_attr') || '{}'); for (var k in at) d.append(k, at[k]); } catch (x) {}
         fetch('https://hooks.zapier.com/hooks/catch/24642695/43b965c/', { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: d.toString() }).catch(function () {});
         if (window.sgHubSpot) window.sgHubSpot('rechner', { firstname: vn, lastname: nn, email: pdfForm.email.value.trim(), website_anfrage_art: 'renditerechner_pdf', quelle_details: 'Kalkulator', rechner_berechnung: sum, message: 'PDF aus dem Renditerechner angefordert\nBerechnung: ' + sum });
-        if (window.fbq) window.fbq('track', 'Lead', { content_name: 'Rechner PDF' });
+        if (window.fbq) window.fbq('trackCustom', 'RechnerPDF');
         loadPdf(function () { makePdf(name); var ok = pdfForm.querySelector('.rc__pdfok'); if (ok) ok.hidden = false; });
       });
     }
