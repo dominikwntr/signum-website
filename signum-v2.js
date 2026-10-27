@@ -717,6 +717,50 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
   });
 })();
 
+/* HubSpot: Anfragen direkt an die HubSpot Formulare senden (Close Zap laeuft parallel bis zum Wechsel) */
+(function () {
+  var PORTAL = (window.SG_CFG || {}).hubspot || '146550668';
+  var G = { anfrage: '4bca05f7-c127-4475-bfdf-0b426091a640', ankauf: '06e9df47-47f3-473f-a575-276211370f70', rechner: 'c578f369-4aa6-41b5-9687-65e94e8f6112' };
+  var ZEIT = { 'In den nächsten 3 Monaten': 'sofort_0_3_monate', 'In 3 bis 6 Monaten': '3_6_monate', 'In 6 bis 12 Monaten': '6_12_monate', 'Später als in 12 Monaten': 'spaeter_12_monate', 'Ich möchte mich erst informieren': 'noch_offen' };
+  var ZIEL = { 'Vermögensaufbau und Altersvorsorge': 'Vermögensaufbau', 'Steuerliche Vorteile nutzen': 'Steuervorteil', 'Passives Einkommen aufbauen': 'Cashflow' };
+  var ART = { 'Kapitalanlage Immobilie': 'kapitalanlage', 'Ankauf': 'objekt_verkaufen', 'Sonstige Anfrage': 'sonstige_anfrage' };
+  function cookie(n) { var m = document.cookie.match('(?:^|; )' + n + '=([^;]*)'); return m ? decodeURIComponent(m[1]) : ''; }
+  function attr() { try { return JSON.parse(localStorage.getItem('sg_attr') || '{}'); } catch (e) { return {}; } }
+  window.sgHubSpot = function (key, v) {
+    if (!G[key]) return Promise.resolve();
+    var a = attr(), paid = !!(a.fbclid || a.gclid || /cpc|paid|ads|social/i.test(a.utm_medium || ''));
+    var base = { quelle: 'Webseite', website_anfrageseite: location.pathname, website_einstiegsseite: a.einstieg, website_referrer: a.referrer,
+      utm_source: a.utm_source, utm_medium: a.utm_medium, utm_content: a.utm_content, kampagne: a.utm_campaign, website_gclid: a.gclid, website_fbclid: a.fbclid,
+      datenschutz_akzeptiert: 'Ja, ' + new Date().toLocaleString('de-DE') };
+    Object.keys(base).forEach(function (k) { if (v[k] === undefined) v[k] = base[k]; });
+    v.quelle_details = [v.quelle_details, paid ? 'Paid Ads' : ''].filter(Boolean).join(';');
+    var fields = Object.keys(v).filter(function (k) { return v[k] !== undefined && v[k] !== null && String(v[k]).trim() !== ''; })
+      .map(function (k) { return { objectTypeId: '0-1', name: k, value: String(v[k]).slice(0, 60000) }; });
+    var ctx = { pageUri: location.href.split('#')[0], pageName: document.title }, hutk = cookie('hubspotutk'); if (hutk) ctx.hutk = hutk;
+    return fetch('https://api-eu1.hsforms.com/submissions/v3/integration/submit/' + PORTAL + '/' + G[key], { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fields: fields, context: ctx }) })
+      .then(function (r) { if (!r.ok) r.text().then(function (t) { try { console.warn('HubSpot', r.status, t); } catch (e) {} }); return r; })
+      .catch(function () {});
+  };
+  document.addEventListener('submit', function (e) {
+    var f = e.target; if (!f.matches || !f.matches('form[data-funnel]') || f.dataset.hs || !f.checkValidity()) return;
+    var d = new FormData(f), g = function (n) { var x = d.get(n); return x ? String(x).trim() : ''; };
+    var it = g('interesse'), ank = f.id === 'ankaufForm' || it === 'Ankauf';
+    if (!g('email')) return; f.dataset.hs = '1';
+    var v = { firstname: g('vorname'), lastname: g('nachname'), email: g('email'), phone: g('telefon'), message: g('nachricht'), erreichbarkeit: g('erreichbarkeit'), meta_event_id: g('event_id') };
+    if (ank) {
+      v.website_anfrage_art = 'objekt_verkaufen'; v.quelle_details = 'Ankaufsprofil'; v.company = g('firma'); v.ankauf_rolle = g('anbieter_rolle'); v.ankauf_objektart = g('verkauf_objekt');
+      v.ankauf_lage = g('verkauf_ort'); v.ankauf_umfang = g('verkauf_umfang'); v.ankauf_baujahr = g('baujahr'); v.ankauf_preisvorstellung = g('preisvorstellung'); v.ankauf_expose_link = g('expose_link');
+      sgHubSpot('ankauf', v); return;
+    }
+    v.website_anfrage_art = g('objekt_anfrage') ? 'expose_anfrage' : (ART[it] || 'sonstige_anfrage');
+    v.was_ist_ihr_ziel_mit_immobilien = g('ziel'); v.motivationziel = ZIEL[g('ziel')]; v.welche_assetklasse_wird_gesucht = g('objekt'); v.aufenthaltsstatus_deutschland = g('wohnsitz');
+    v.berufliche_situation = g('beruf'); v.probezeit_bestanden = g('probezeit'); v.seit_2_jahren_selbsstandig = g('selbstaendig_2_jahre'); v.nettoeinkommen = g('einkommen');
+    v.eigenkapital = g('eigenkapital'); v.immobilienkauf_mit_weiteren_personen = g('gemeinsam'); v.zeithorizont = ZEIT[g('zeithorizont')]; v.aufmerksam_geworden_durch = g('aufmerksam');
+    v.angefragtes_objekt = g('objekt_anfrage'); v.rechner_berechnung = g('berechnung'); if (g('berechnung')) v.quelle_details = 'Kalkulator';
+    sgHubSpot('anfrage', v);
+  }, true);
+})();
+
 
 /* ===== Signum Rechner v3: Oberfläche ===== */
 (function () {
@@ -887,6 +931,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
         var d = new URLSearchParams({ vorname: vn, nachname: nn, email: pdfForm.email.value.trim(), datenschutz: 'akzeptiert', interesse: 'Kapitalanlage Immobilie', berechnung: sum, nachricht: 'PDF aus dem Renditerechner angefordert\nBerechnung: ' + sum, seite: location.pathname, quelle: 'Website Rechner PDF' });
         try { var at = JSON.parse(localStorage.getItem('sg_attr') || '{}'); for (var k in at) d.append(k, at[k]); } catch (x) {}
         fetch('https://hooks.zapier.com/hooks/catch/24642695/43b965c/', { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: d.toString() }).catch(function () {});
+        if (window.sgHubSpot) window.sgHubSpot('rechner', { firstname: vn, lastname: nn, email: pdfForm.email.value.trim(), website_anfrage_art: 'renditerechner_pdf', quelle_details: 'Kalkulator', rechner_berechnung: sum, message: 'PDF aus dem Renditerechner angefordert\nBerechnung: ' + sum });
         if (window.fbq) window.fbq('track', 'Lead', { content_name: 'Rechner PDF' });
         loadPdf(function () { makePdf(name); var ok = pdfForm.querySelector('.rc__pdfok'); if (ok) ok.hidden = false; });
       });

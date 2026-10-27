@@ -1,0 +1,63 @@
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','721367450594008'); fbq('track','PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=721367450594008&ev=PageView&noscript=1" alt=""/></noscript>
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }}); }, {threshold:.12, rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.rv').forEach(function(el,i){ if(reduce){el.classList.add('in');return;} el.style.transitionDelay = (Math.min(i,4)*70)+'ms'; io.observe(el); });
+
+  var rail = document.querySelector('[data-rail]');
+  if(rail){ if(reduce){ rail.style.transform = 'scaleX('+(+rail.getAttribute('data-rail')/100)+')'; } else { new IntersectionObserver(function(es,o){ es.forEach(function(e){ if(e.isIntersecting){ rail.style.transform = 'scaleX('+(+rail.getAttribute('data-rail')/100)+')'; o.disconnect(); }}); }).observe(rail); } }
+
+  function count(el){ var target = +el.getAttribute('data-count'); if(reduce){ el.textContent = target.toLocaleString('de-DE'); return; } var start=null, dur=1200;
+    function tick(ts){ if(!start) start=ts; var p=Math.min((ts-start)/dur,1); var eased=1-Math.pow(1-p,3); el.textContent=Math.round(target*eased).toLocaleString('de-DE'); if(p<1) requestAnimationFrame(tick); else el.textContent=target.toLocaleString('de-DE'); }
+    requestAnimationFrame(tick);
+  }
+  var co = new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ count(e.target); co.unobserve(e.target); }}); }, {threshold:.6});
+  document.querySelectorAll('[data-count]').forEach(function(el){ co.observe(el); });
+
+  var hero = document.querySelector('.hero'), bar = document.getElementById('sbar');
+  if(hero && bar){ new IntersectionObserver(function(e){ bar.classList.toggle('show', !e[0].isIntersecting); }).observe(hero); }
+
+  var params = new URLSearchParams(location.search);
+  var WEBHOOK = 'https://hooks.zapier.com/hooks/catch/24642695/43b965c/';
+  var f = document.getElementById('leadForm');
+  f.addEventListener('submit', function(e){
+    e.preventDefault();
+    if(!f.checkValidity()){ f.reportValidity(); return; }
+    var btn = f.querySelector('button'); btn.disabled = true; btn.textContent = 'Wird gesendet \u2026';
+    var data = new URLSearchParams(new FormData(f));
+    data.append('quelle','Kampagne Berlin-Pankow AfA');
+    ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function(k){ if(params.get(k)) data.append(k, params.get(k)); });
+    /* HubSpot: Anfrage direkt an das Formular 'Website | Landingpage Berlin Pankow' (Close Zap laeuft parallel bis zum Wechsel) */
+    try {
+      var nm = (f.querySelector('[name=name]').value || '').trim().split(/\s+/), gv = function(n){ var el = f.querySelector('[name=' + n + ']'); return el ? (el.value || '').trim() : ''; };
+      var ck = document.cookie.match('(?:^|; )hubspotutk=([^;]*)'), pd = params.get('fbclid') || params.get('gclid') || /cpc|paid|ads|social/i.test(params.get('utm_medium') || '');
+      var hv = { firstname: nm.length > 1 ? nm.slice(0, -1).join(' ') : nm[0], lastname: nm.length > 1 ? nm[nm.length - 1] : '', email: gv('email'), phone: gv('phone'),
+        eigenkapital: gv('eigenkapital'), nettoeinkommen: gv('nettoeinkommen'), quelle: 'Webseite', quelle_details: pd ? 'Paid Ads' : '', website_anfrage_art: 'lp_berlin_pankow',
+        message: 'Landingpage Berlin Pankow, Steuer Spar Analyse angefragt, Kapitalanlage best\u00e4tigt\nEigenkapital: ' + gv('eigenkapital') + '\nNettoeinkommen: ' + gv('nettoeinkommen'),
+        website_anfrageseite: location.pathname, website_einstiegsseite: location.pathname, website_referrer: (document.referrer || '').split('?')[0],
+        kampagne: params.get('utm_campaign') || 'Kampagne Berlin-Pankow AfA', utm_source: params.get('utm_source') || '', utm_medium: params.get('utm_medium') || '', utm_content: params.get('utm_content') || '',
+        website_fbclid: params.get('fbclid') || '', website_gclid: params.get('gclid') || '', datenschutz_akzeptiert: 'Ja, ' + new Date().toLocaleString('de-DE') };
+      var fl = Object.keys(hv).filter(function(k){ return hv[k]; }).map(function(k){ return { objectTypeId: '0-1', name: k, value: String(hv[k]) }; });
+      var cx = { pageUri: location.href.split('#')[0], pageName: document.title }; if (ck) cx.hutk = decodeURIComponent(ck[1]);
+      fetch('https://api-eu1.hsforms.com/submissions/v3/integration/submit/146550668/179670c6-3976-4ca4-910d-0a7f2498aec7', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fields: fl, context: cx }) }).catch(function(){});
+    } catch (x) {}
+    function done(){ f.style.display='none'; document.getElementById('danke').style.display='block'; if(window.fbq) fbq('track','Lead',{content_name:'Berlin-Pankow AfA'}); }
+    if(WEBHOOK.indexOf('http')===0){ fetch(WEBHOOK,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:data.toString()}).then(done).catch(done); }
+    else { done(); }
+  });
+
+  // Hoehe an eine einbettende Seite (Webflow-iframe) melden -> nahtlose Hoehe
+  if(window.parent !== window){
+    var report = function(){ try{ parent.postMessage({signumLP:true, h:document.documentElement.scrollHeight}, '*'); }catch(e){} };
+    window.addEventListener('load', report);
+    window.addEventListener('resize', report);
+    if(window.ResizeObserver){ new ResizeObserver(report).observe(document.body); }
+    setTimeout(report, 400); setTimeout(report, 1500);
+  }
+})();
+</script>
