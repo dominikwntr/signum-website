@@ -2106,3 +2106,16 @@ html:has(.sah),html:has(.sah) body{overflow-x:clip!important;overflow-y:visible!
 .sar__bar--na{display:none}
 .sar__lg:empty{display:none}
 .sar__bar--b b{background:var(--white);padding:0 .2em;border-radius:2px;left:60%}
+/* Diagramm im Ratgeber */
+.rgd{margin:2rem 0;padding:1.5rem 1.25rem 1rem;border:1px solid var(--line);border-radius:6px;background:var(--white)}
+.rgd__plot{position:relative}
+.rgd .sar__chart{height:clamp(220px,30vw,320px)}
+.rgd .sar__chart b{font-size:clamp(.55rem,.9vw,.72rem)}
+.rgd__line{position:absolute;left:0;right:0;bottom:calc(var(--h) * 100% + .25rem);border-top:2px dashed var(--messing);z-index:2;pointer-events:none}
+.rgd__line em{position:absolute;right:0;bottom:.3rem;font-style:normal;font-size:.72rem;font-weight:600;color:var(--messing);background:var(--white);padding:0 .3rem}
+.rgd figcaption{margin-top:.75rem;font-size:.75rem;color:var(--muted);line-height:1.5}
+@media(max-width:600px){.rgd .sar__chart b{display:none}}
+.rgd ul{list-style:none!important;padding:0!important;margin:0!important}
+.rgd ul li{padding:0!important;margin:0!important;line-height:1.2}
+.rgd ul li::before,.rgd ul li::marker{content:none!important;display:none!important}
+.rgd .sar__years{margin-top:.6rem!important}
