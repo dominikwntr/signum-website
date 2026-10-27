@@ -642,7 +642,6 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { sgAmort:
   }
   /* Zahlen hochzählen */
   var cnt = [].slice.call(document.querySelectorAll('[data-sa]'));
-  cnt.forEach(function (el) { if (!reduce) el.textContent = fmt(0, +(el.getAttribute('data-dec') || 0)); });
   onView(cnt, function (el) {
     var t = parseFloat(el.getAttribute('data-sa')), d = +(el.getAttribute('data-dec') || 0);
     if (reduce) { el.textContent = fmt(t, d); return; }
