@@ -2120,3 +2120,6 @@ html:has(.sah),html:has(.sah) body{overflow-x:clip!important;overflow-y:visible!
 .rgd ul li{padding:0!important;margin:0!important;line-height:1.2}
 .rgd ul li::before,.rgd ul li::marker{content:none!important;display:none!important}
 .rgd .sar__years{margin-top:.6rem!important}
+
+/* Teamkarten: E-Mail immer unten bündig, auch bei mehrzeiligen Rollen (02.11.2026) */
+.tc{display:flex;flex-direction:column}.tc__info{flex:1;display:flex;flex-direction:column;align-items:flex-start}.tc__info p{margin-bottom:.5rem}.tc__info a{margin-top:auto}
