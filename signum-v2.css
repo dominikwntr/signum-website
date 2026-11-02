@@ -2126,3 +2126,6 @@ html:has(.sah),html:has(.sah) body{overflow-x:clip!important;overflow-y:visible!
 
 /* Teamkarten: Titel/Qualifikation klein und grau, Stelle dunkel und kräftiger (02.11.2026) */
 .tc__info p .tc__q{display:block;font-size:.72rem;line-height:1.4;color:var(--muted);margin-bottom:.2rem}.tc__info p .tc__f{display:block;font-size:.82rem;font-weight:500;color:var(--ink)}
+
+/* Mehr Luft zwischen Titel und Stelle (02.11.2026) */
+.tc__info p .tc__q{margin-bottom:.6rem}
